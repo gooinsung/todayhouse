@@ -29,6 +29,9 @@ dependencies {
     // Spring Boot Starter
     testImplementation ('org.springframework.boot:spring-boot-starter-test')
 
+    // Validation
+    implementation ('org.springframework.boot:spring-boot-starter-validation')
+
     // Lombok
     implementation ('org.projectlombok:lombok')
     compileOnly ('org.projectlombok:lombok:1.18.24')
@@ -38,7 +41,6 @@ dependencies {
     runtimeOnly ('mysql:mysql-connector-java') //mysql8
     //runtimeOnly 'mysql:mysql-connector-java:5.1.47' //mysql5
     implementation ('org.springframework.boot:spring-boot-starter-jdbc')
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa') //mysql 5버전의 경우 삭제.
 
 
 
