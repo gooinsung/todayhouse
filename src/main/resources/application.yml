@@ -1,49 +1,17 @@
 server:
   port: 8080
-  tomcat:
-    uri-encoding: UTF-8
 
-#spring:
-#  jwt:
-#    secret: QQsadnsadW@34dsfb_dsfjewuft!@@##@
-
----
 spring:
-  profiles: local
   application:
     name: demo
 
   datasource:
     platform: mysql
     url: jdbc:mysql://database-1.ckevuiz8guuf.ap-northeast-2.rds.amazonaws.com/test?autoReconnect=true # 변경해주세요
-    username:  admin # 변경해주세요
-    password:  Rndlstjd112! # 변경해주세요
+    username:  admin
+    password:  Rndlstjd112!
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
 
 
 
----
-spring:
-  profiles: dev
-  application:
-    name: demo
 
-  datasource:
-    platform: mysql
-    url: jdbc:mysql://database-1.ckevuiz8guuf.ap-northeast-2.rds.amazonaws.com/test?autoReconnect=true # 변경해주세요
-    username:  admin # 변경해주세요
-    password:  Rndlstjd112! # 변경해주세요
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
----
-spring:
-  profiles: prod
-  application:
-    name: demo
-
-  datasource:
-    platform: mysql
-    url: jdbc:mysql://database-1.ckevuiz8guuf.ap-northeast-2.rds.amazonaws.com/todayhouse?autoReconnect=true # 변경해주세요
-    username:  admin # 변경해주세요
-    password:  Rndlstjd112! # 변경해주세요
-    driver-class-name: com.mysql.cj.jdbc.Driver
