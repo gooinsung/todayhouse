@@ -42,7 +42,8 @@ dependencies {
     //runtimeOnly 'mysql:mysql-connector-java:5.1.47' //mysql5
     implementation ('org.springframework.boot:spring-boot-starter-jdbc')
 
-
+    // Devtools
+    implementation ('org.springframework.boot:spring-boot-devtools')
 
     // Web
     implementation ('org.springframework.boot:spring-boot-starter-web')
