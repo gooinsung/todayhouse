@@ -18,14 +18,14 @@ public class SaveReviewDTO {
     private String filename;
 
     @Builder
-    public SaveReviewDTO(PostReviewRequest request, String filename){
+    public SaveReviewDTO(PostReviewRequest request, String filename,int productNum){
         this.userNum=request.getUserNum();
         this.reviewContent=request.getReviewContent();
         this.point1=request.getPoint1();
         this.point2=request.getPoint2();
         this.point3= request.getPoint3();
         this.point4=request.getPoint4();
-        this.productNum=request.getProductNum();
+        this.productNum=productNum;
         this.filename=filename;
     }
 }

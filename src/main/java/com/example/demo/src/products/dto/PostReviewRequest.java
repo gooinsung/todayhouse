@@ -19,6 +19,5 @@ public class PostReviewRequest {
     private int point2;
     private int point3;
     private int point4;
-    private int productNum;
 
 }

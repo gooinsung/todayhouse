@@ -12,6 +12,17 @@ spring:
     password: Rndlstjd112!
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
 
-
+cloud:
+  aws:
+    s3:
+      bucket: bali-todayhouse
+    credentials:
+      access-key: AKIA4GS24BHYWNQMB7PS
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
 
 

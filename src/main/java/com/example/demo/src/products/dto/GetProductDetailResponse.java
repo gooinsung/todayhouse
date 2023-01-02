@@ -17,8 +17,11 @@ import java.util.List;
 public class GetProductDetailResponse {
     private Product product;
 /*    private List<Resource> resourceList= new ArrayList<>();*/
-    private List<byte[]> byteArrays= new ArrayList<>();
-    private List<Resource> resourceList= new ArrayList<>();
+/*    private List<byte[]> byteArrays= new ArrayList<>();
+    private List<Resource> resourceList= new ArrayList<>();*/
+
+
+    private List<String> urls= new ArrayList<>();
 
 
 }

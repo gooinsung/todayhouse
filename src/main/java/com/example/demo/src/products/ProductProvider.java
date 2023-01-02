@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.products.dto.GetProductDetailResponse;
 import com.example.demo.src.products.dto.GetProductResponse;
 import com.example.demo.src.products.model.GetProduct;
+import com.example.demo.utils.S3Uploader;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +30,15 @@ public class ProductProvider {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private ProductDao productDao;
+    private S3Uploader s3Uploader;
 
     @Autowired
-    public ProductProvider(ProductDao productDao) {
+    public ProductProvider(ProductDao productDao,S3Uploader s3Uploader) {
         this.productDao = productDao;
+        this.s3Uploader=s3Uploader;
     }
 
-    @Transactional
+/*    @Transactional
     public GetProductDetailResponse getProductDetailResponse(int productNum) throws BaseException, IOException {
         GetProductDetailResponse response= new GetProductDetailResponse();
         String path=System.getProperty("user.dir")+"\\src\\main\\resources\\static\\files\\";
@@ -46,21 +49,16 @@ public class ProductProvider {
         List<Resource> resourceList1= new ArrayList<>();
 
         for(String img:imgNames){
-    /*        Resource resource= new FileSystemResource(path+folder+img);
-            resourceList.add(resource);*/
             Resource resource= new UrlResource("file:"+path+img);
             resourceList1.add(resource);
-      /*      InputStream imageStream= new FileInputStream(path+img);
-            byte[] imageByteArray=imageStream.readAllBytes();
-            bytes.add(imageByteArray);*/
         }
         response.setProduct(productDao.getProductDetail(productNum));
         response.setByteArrays(bytes);
         response.setResourceList(resourceList1);
-        /*response.setResourceList(resourceList);*/
+        *//*response.setResourceList(resourceList);*//*
         return response;
 
-    }
+    }*/
 
     @Transactional
     public List<GetProductResponse> getProductList() throws BaseException, IOException {
@@ -71,5 +69,13 @@ public class ProductProvider {
             result.add(response);
        }
        return result;
+    }
+
+    @Transactional
+    public GetProductDetailResponse getProductDetailResponse1(int productNum) throws BaseException,IOException{
+        GetProductDetailResponse response= new GetProductDetailResponse();
+        response.setProduct(productDao.getProductDetail(productNum));
+        response.setUrls(productDao.getProductImgs(productNum));
+        return response;
     }
 }
