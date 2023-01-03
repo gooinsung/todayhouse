@@ -1,12 +1,11 @@
 package com.example.demo.src.products;
 
 import com.example.demo.src.products.dto.*;
-import com.example.demo.src.products.model.GetProduct;
-import com.example.demo.src.products.model.Product;
+import com.example.demo.src.products.dto.object.GetProduct;
+import com.example.demo.src.products.dto.object.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;

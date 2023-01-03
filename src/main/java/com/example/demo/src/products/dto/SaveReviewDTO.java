@@ -3,9 +3,7 @@ package com.example.demo.src.products.dto;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class SaveReviewDTO {
     private int userNum;

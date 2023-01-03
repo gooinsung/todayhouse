@@ -3,25 +3,15 @@ package com.example.demo.src.products;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.products.dto.GetProductDetailResponse;
 import com.example.demo.src.products.dto.GetProductResponse;
-import com.example.demo.src.products.model.GetProduct;
+import com.example.demo.src.products.dto.object.GetProduct;
 import com.example.demo.utils.S3Uploader;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 

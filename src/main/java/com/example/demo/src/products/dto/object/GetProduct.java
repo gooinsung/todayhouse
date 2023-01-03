@@ -1,13 +1,8 @@
-package com.example.demo.src.products.model;
+package com.example.demo.src.products.dto.object;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class GetProduct {
     private int productNum;

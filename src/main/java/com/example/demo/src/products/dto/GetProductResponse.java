@@ -1,18 +1,13 @@
 package com.example.demo.src.products.dto;
 
-import com.example.demo.src.products.model.GetProduct;
+import com.example.demo.src.products.dto.object.GetProduct;
 import lombok.*;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class GetProductResponse {
     private int productNum;

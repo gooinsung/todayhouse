@@ -2,9 +2,7 @@ package com.example.demo.src.products.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class ExamSaveDTO {
     private String productName;
