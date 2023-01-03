@@ -31,6 +31,7 @@ public class ProductController {
         this.productProvider = productProvider;
     }
 
+    // 상품 상세조회 페이지(1)
     @GetMapping("/{productNum}")
     public BaseResponse<GetProductDetailResponse> getProductDetails(@PathVariable int productNum) throws BaseException, IOException{
         GetProductDetailResponse response=productProvider.getProductDetailResponse1(productNum);
@@ -38,7 +39,7 @@ public class ProductController {
     }
 
 
-
+    // 상품리스트 조회 페이지(2)
     @GetMapping("")
     public BaseResponse<List<GetProductResponse>> getProductList() throws BaseException, IOException {
         List<GetProductResponse> result= productProvider.getProductList();
@@ -64,9 +65,9 @@ public class ProductController {
 
     // 테스트 데이터 삽입을 위한 메서드(지울것)
     @PostMapping("")
-    public BaseResponse<String> postProduct(@RequestPart ExamRequest dto, @RequestPart MultipartFile thumbnail, @RequestPart MultipartFile[] files)throws BaseException,IOException{
+    public BaseResponse<String> postProduct(@RequestPart ExamRequest examRequest, @RequestPart MultipartFile thumbnail, @RequestPart MultipartFile[] files)throws BaseException,IOException{
         String result="실패";
-        if(productService.postProduct(dto,thumbnail,files)){
+        if(productService.postProduct(examRequest,thumbnail,files)){
             result="성공!";
         }
         return new BaseResponse<>(result);

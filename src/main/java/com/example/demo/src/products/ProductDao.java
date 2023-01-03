@@ -63,21 +63,35 @@ public class ProductDao {
     }
 
     // 게시글 리스트 가져오기
-    public List<GetProduct> getProductList(){
+    public List<GetProductResponse> getProductList(){
         String query= "select productNum,productName,productPrice,thumbnail,productCate from product";
-        return this.jdbcTemplate.query(query, new RowMapper<GetProduct>() {
+        return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
             @Override
-            public GetProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
-                GetProduct getProduct= new GetProduct();
-                getProduct.setProductNum(rs.getInt("productNum"));
-                getProduct.setProductName(rs.getString("productName"));
-                getProduct.setProductPrice(rs.getInt("productPrice"));
-                getProduct.setProductCate(rs.getInt("productCate"));
-                getProduct.setThumbnail(rs.getString("thumbnail"));
-                return getProduct;
+            public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetProductResponse response= new GetProductResponse();
+                response.setProductNum(rs.getInt("productNum"));
+                response.setProductName(rs.getString("productName"));
+                response.setProductPrice(rs.getInt("productPrice"));
+                response.setProductCate(rs.getInt("productCate"));
+                response.setThumbnail(rs.getString("thumbnail"));
+                return response;
             }
         });
 
+    }
+
+    // 상품 정보 가져오는 메서드
+    public Product getProductInfo(int productNum){
+        String query="select productNum,productPrice from product where productNum=?";
+        return this.jdbcTemplate.queryForObject(query, new RowMapper<Product>() {
+            @Override
+            public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Product product= new Product();
+                product.setProductNum(rs.getInt("productNum"));
+                product.setProductPrice(rs.getInt("productPrice"));
+                return product;
+            }
+        },productNum);
     }
 
 

@@ -33,13 +33,8 @@ public class ProductProvider {
     @Transactional
     public List<GetProductResponse> getProductList() throws BaseException, IOException {
         try{
-            List<GetProduct> getProducts = productDao.getProductList();
-            List<GetProductResponse> result = new ArrayList<>();
-            for (GetProduct getProduct : getProducts) {
-                GetProductResponse response = new GetProductResponse(getProduct);
-                result.add(response);
-            }
-            return result;
+            List<GetProductResponse> getProducts = productDao.getProductList();
+            return getProducts;
         }catch(Exception exception){
             logger.error("App - getProductList Provider Error", exception);
             throw new BaseException(DATABASE_ERROR);

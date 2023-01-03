@@ -53,8 +53,6 @@ public class UserService {
     public boolean loginUser(PostLoginRequest postLoginRequest) throws BaseException{
         try{
             boolean result= false;
-            System.out.println("userEmail: "+postLoginRequest.getUserEmail());
-            System.out.println("userPw:"+postLoginRequest.getUserPw());
             if(userDao.checkEmail(postLoginRequest.getUserEmail())!=1){
                 throw new BaseException(USERS_EMPTY_USER_ID);
             }

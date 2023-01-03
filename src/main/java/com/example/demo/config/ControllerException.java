@@ -21,9 +21,9 @@ public class ControllerException {
         return new BaseResponse(DATABASE_ERROR);
     }
 
-    @ExceptionHandler(IOException.class)
+/*    @ExceptionHandler(IOException.class)
     public BaseResponse IOExceptionHandler(IOException e){
         logger.error("Controller 내 IOException 발생");
         return new BaseResponse(IO_ERROR);
-    }
+    }*/
 }
