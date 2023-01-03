@@ -25,6 +25,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+
 @Service
 public class ProductProvider {
 
@@ -38,44 +40,33 @@ public class ProductProvider {
         this.s3Uploader=s3Uploader;
     }
 
-/*    @Transactional
-    public GetProductDetailResponse getProductDetailResponse(int productNum) throws BaseException, IOException {
-        GetProductDetailResponse response= new GetProductDetailResponse();
-        String path=System.getProperty("user.dir")+"\\src\\main\\resources\\static\\files\\";
-        String folder="";
-        List<Resource> resourceList= new ArrayList<>();
-        List<byte[]> bytes= new ArrayList<>();
-        List<String> imgNames= productDao.getProductImgs(productNum);
-        List<Resource> resourceList1= new ArrayList<>();
-
-        for(String img:imgNames){
-            Resource resource= new UrlResource("file:"+path+img);
-            resourceList1.add(resource);
-        }
-        response.setProduct(productDao.getProductDetail(productNum));
-        response.setByteArrays(bytes);
-        response.setResourceList(resourceList1);
-        *//*response.setResourceList(resourceList);*//*
-        return response;
-
-    }*/
-
     @Transactional
     public List<GetProductResponse> getProductList() throws BaseException, IOException {
-       List<GetProduct> getProducts=productDao.getProductList();
-       List<GetProductResponse> result= new ArrayList<>();
-       for (GetProduct getProduct:getProducts){
-            GetProductResponse response=new GetProductResponse(getProduct);
-            result.add(response);
-       }
-       return result;
+        try{
+            List<GetProduct> getProducts = productDao.getProductList();
+            List<GetProductResponse> result = new ArrayList<>();
+            for (GetProduct getProduct : getProducts) {
+                GetProductResponse response = new GetProductResponse(getProduct);
+                result.add(response);
+            }
+            return result;
+        }catch(Exception exception){
+            logger.error("App - getProductList Provider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+
     }
 
     @Transactional
     public GetProductDetailResponse getProductDetailResponse1(int productNum) throws BaseException,IOException{
-        GetProductDetailResponse response= new GetProductDetailResponse();
-        response.setProduct(productDao.getProductDetail(productNum));
-        response.setUrls(productDao.getProductImgs(productNum));
-        return response;
+        try{
+            GetProductDetailResponse response= new GetProductDetailResponse();
+            response.setProduct(productDao.getProductDetail(productNum));
+            response.setUrls(productDao.getProductImgs(productNum));
+            return response;
+        }catch (Exception exception){
+            logger.error("App - getProductDetailResponse1 Provider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

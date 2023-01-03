@@ -95,13 +95,13 @@ public class ProductDao {
         String query="insert into product (productName,productPrice,productInfo,productCate,productCnt,thumbnail) values(?,?,?,?,?,?)";
         Object[] insertParam= new Object[]{req.getProductName(),req.getProductPrice(),req.getProductInfo(),req.getProductCate(),req.getProductCnt(),req.getThumbnail()};
         if(this.jdbcTemplate.update(query,insertParam)==1){
-            String query1="select productNum from product where productName=?";
+            String query1="select last_insert_id() as productNum";
             int productNum=this.jdbcTemplate.queryForObject(query1, new RowMapper<Integer>() {
                 @Override
                 public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
                     return rs.getInt("productNum");
                 }
-            },req.getProductName());
+            });
             this.postProductPics(filenames,productNum);
             result=1;
         }
