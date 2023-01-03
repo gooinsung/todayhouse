@@ -2,7 +2,7 @@ package com.example.demo.src.carts;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.carts.dto.CreateOrderAndCartSaveDto;
-import com.example.demo.src.carts.dto.PostOrdersCart;
+import com.example.demo.src.carts.dto.PostOrdersCartRequest;
 import com.example.demo.src.products.ProductDao;
 import com.example.demo.src.products.dto.object.Product;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public boolean addOrderAndCart(int userNum, PostOrdersCart req)throws BaseException{
+    public boolean addOrderAndCart(int userNum, PostOrdersCartRequest req)throws BaseException{
         try{
             boolean result= false;
             Product product= productDao.getProductInfo(req.getProductNum());

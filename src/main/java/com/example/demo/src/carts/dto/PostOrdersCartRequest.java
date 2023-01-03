@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PostOrdersCart {
+public class PostOrdersCartRequest {
     private int productNum;
     private int orderCnt;
 }

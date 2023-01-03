@@ -45,6 +45,7 @@ public class UserDao {
 
 
 
+
     // PrincipalDetailsService 를 위한 loadByUsername
     public User loadByUsername(String userNickName){
         String query="select userNum,userEmail,userPw,userNickName,userImg from user where userEmail=?";
