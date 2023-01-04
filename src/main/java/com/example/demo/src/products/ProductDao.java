@@ -25,7 +25,7 @@ public class ProductDao {
 
     // 게시글 상세정보 가져오기
     public Product getProductDetail(int productNum){
-        String query= "select count(r.reviewNum) as cnt, p.productNum, p.productName, p.productPrice, p.productInfo, p.productCate, p.thumbnail from product p left join review r on p.productNum= r.productNum where p.productNum=?";
+        String query= "select count(r.reviewNum) as cnt, p.productNum, p.productName, p.productPrice, p.productInfo, p.productCate, p.thumbnail, p.productCom, r.pointAvg from product p left join review r on p.productNum= r.productNum where p.productNum=?";
         GetProductDetailResponse response= new GetProductDetailResponse(); 
         return this.jdbcTemplate.queryForObject(query, new RowMapper<Product>() {
             @Override
@@ -38,6 +38,8 @@ public class ProductDao {
                 product.setProductPrice(rs.getInt("productPrice"));
                 product.setProductCate(rs.getInt("productCate"));
                 product.setThumbnail(rs.getString("thumbnail"));
+                product.setProductCom(rs.getString("productCom"));
+                product.setReviewAvg(rs.getFloat("pointAvg"));
                 return product;
             }
         },productNum);
@@ -57,14 +59,14 @@ public class ProductDao {
 
     // 리뷰 작성
     public int insertReview(SaveReviewDTO dto){
-        String query="insert into review (reviewContent,storedFilename,point1,point2,point3,point4,productNum,userNum) values(?,?,?,?,?,?,?,?)";
-        Object[] insertReviewParam= new Object[]{dto.getReviewContent(),dto.getFilename(),dto.getPoint1(),dto.getPoint2(),dto.getPoint3(),dto.getPoint4(),dto.getProductNum(),dto.getUserNum()};
+        String query="insert into review (reviewContent,storedFilename,point1,point2,point3,point4,productNum,userNum,pointAvg) values(?,?,?,?,?,?,?,?,?)";
+        Object[] insertReviewParam= new Object[]{dto.getReviewContent(),dto.getFilename(),dto.getPoint1(),dto.getPoint2(),dto.getPoint3(),dto.getPoint4(),dto.getProductNum(),dto.getUserNum(),dto.getPointAvg()};
         return this.jdbcTemplate.update(query,insertReviewParam);
     }
 
     // 게시글 리스트 가져오기
     public List<GetProductResponse> getProductList(){
-        String query= "select productNum,productName,productPrice,thumbnail,productCate from product";
+        String query= "select p.productNum, p.productName, p.productPrice, p.thumbnail, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg from product p";
         return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
             @Override
             public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -74,6 +76,9 @@ public class ProductDao {
                 response.setProductPrice(rs.getInt("productPrice"));
                 response.setProductCate(rs.getInt("productCate"));
                 response.setThumbnail(rs.getString("thumbnail"));
+                response.setReviewCnt(rs.getInt("reviewCnt"));
+                response.setProductCom(rs.getString("productCom"));
+                response.setReviewAvg(rs.getFloat("reviewAvg"));
                 return response;
             }
         });

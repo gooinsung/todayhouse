@@ -12,4 +12,6 @@ public class Product{
     private int productCate;
     private String thumbnail;
     private int reviewCnt;
+    private String productCom;
+    private float reviewAvg;
 }

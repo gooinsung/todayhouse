@@ -35,8 +35,8 @@ public class UserDao {
 
     // 회원 가입
     public int createUser(PostJoinRequest req){
-        String query="insert into user (userEmail,userPw,userNickName) values(?,?,?)";
-        Object[] insertParam=new Object[]{req.getUserEmail(),req.getUserPw(),req.getUserNickName()};
+        String query="insert into user (userEmail,userPw,userNickName,agree1,agree2) values(?,?,?,?,?)";
+        Object[] insertParam=new Object[]{req.getUserEmail(),req.getUserPw(),req.getUserNickName(),req.getAgree1(),req.getAgree2()};
         return this.jdbcTemplate.update(query,insertParam);
     }
 

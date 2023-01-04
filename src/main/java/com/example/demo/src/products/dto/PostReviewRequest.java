@@ -10,6 +10,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Data
 @NoArgsConstructor
 public class PostReviewRequest {
+
     @Positive
     private int userNum;
 

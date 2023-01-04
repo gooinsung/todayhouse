@@ -15,6 +15,8 @@ public class SaveReviewDTO {
     private int productNum;
     private String filename;
 
+    private int pointAvg;
+
     @Builder
     public SaveReviewDTO(PostReviewRequest request, String filename,int productNum){
         this.userNum=request.getUserNum();
@@ -25,5 +27,6 @@ public class SaveReviewDTO {
         this.point4=request.getPoint4();
         this.productNum=productNum;
         this.filename=filename;
+        this.pointAvg= (request.getPoint1()+request.getPoint2()+ request.getPoint3()+ request.getPoint4())/4;
     }
 }

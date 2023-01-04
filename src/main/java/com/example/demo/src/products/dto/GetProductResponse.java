@@ -15,5 +15,7 @@ public class GetProductResponse {
     private int productPrice;
     private String thumbnail;
     private int productCate;
-
+    private int reviewCnt;
+    private String productCom;
+    private float reviewAvg;
 }

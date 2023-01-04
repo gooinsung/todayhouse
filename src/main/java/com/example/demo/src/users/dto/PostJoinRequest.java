@@ -19,37 +19,16 @@ public class PostJoinRequest {
     @NotBlank
     private String userNickName;
     
-    // 14세이상 약관동의
-
+    // 마케딩 활용 동의
     @PositiveOrZero
     @Min(value=1)
     @Max(value=1)
     private int agree1;
     
-    // 이용약관 동의
-
+    // 메세지 수신 동의
     @PositiveOrZero
     @Min(value=1)
     @Max(value=1)
     private int agree2;
-    
-    // 개인정보 이용 동의
 
-    @PositiveOrZero
-    @Min(value=1)
-    @Max(value=1)
-    private int agree3;
-    
-    // 마케팅 활용 동의
-
-    @PositiveOrZero
-    @Max(value=1)
-    private int agree4;
-    
-    // 메세지 수신 동의
-
-    @PositiveOrZero
-    @Max(value=1)
-    private int agree5;
-    
 }

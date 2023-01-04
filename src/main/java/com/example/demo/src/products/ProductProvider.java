@@ -47,7 +47,7 @@ public class ProductProvider {
         try{
             GetProductDetailResponse response= new GetProductDetailResponse();
             response.setProduct(productDao.getProductDetail(productNum));
-            response.setUrls(productDao.getProductImgs(productNum));
+            response.setProductImg(productDao.getProductImgs(productNum));
             return response;
         }catch (Exception exception){
             logger.error("App - getProductDetailResponse1 Provider Error", exception);

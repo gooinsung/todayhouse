@@ -8,13 +8,14 @@ import javax.validation.constraints.Positive;
 
 @Data
 @NoArgsConstructor
-public class PostOrdersCartRequest {
-
+public class PatchOrderCntRequest {
     @NotBlank
     @Positive
-    private int productNum;
+    private int ordersNum;
 
     @NotBlank
     @Positive
     private int orderCnt;
+
+
 }

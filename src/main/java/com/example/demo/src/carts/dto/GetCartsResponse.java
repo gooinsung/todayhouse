@@ -12,4 +12,5 @@ public class GetCartsResponse {
     private List<Cart> cartList;
     private int userNum;
     private int totalPrice;
+
 }
