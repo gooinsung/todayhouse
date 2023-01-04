@@ -31,10 +31,14 @@ public class ProductService {
         this.s3Uploader=s3Uploader;
     }
 
+    @Transactional
     public boolean postReview(PostReviewRequest req,MultipartFile file, int productNum)throws BaseException, IOException {
         try{
             boolean result= false;
-            String savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
+            String savedUrl="";
+            if(!file.isEmpty()){
+                savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
+            }
             SaveReviewDTO dto= new SaveReviewDTO(req, savedUrl,productNum);
             if(productDao.insertReview(dto)==1){
                 result=true;
@@ -47,10 +51,14 @@ public class ProductService {
 
     }
 
+    @Transactional
     public boolean patchReview(PatchReviewRequest req,MultipartFile file, int reviewNum) throws BaseException,IOException{
         try{
             boolean result=false;
-            String savedFile= s3Uploader.uploadFiles(file,"todayhouse");
+            String savedFile="";
+            if(!file.isEmpty()){
+                savedFile= s3Uploader.uploadFiles(file,"todayhouse");
+            }
             UpdateReviewDTO dto= new UpdateReviewDTO(req,savedFile,reviewNum);
             if(productDao.updateReview(dto)==1){
                 result=true;

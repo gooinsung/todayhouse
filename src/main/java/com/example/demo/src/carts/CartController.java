@@ -39,7 +39,7 @@ public class CartController {
     @PostMapping("")
     public BaseResponse<String> addCart(@RequestParam int userNum, @RequestBody PostOrdersCartRequest postOrdersCart) throws BaseException{
         String result="장바구니 담기 실패";
-        if(cartService.addOrderAndCart(userNum,postOrdersCart)){
+        if(cartService.addCart(userNum,postOrdersCart)){
             result="장바구니 담기 성공";
         }
         return new BaseResponse<>(result);
@@ -55,15 +55,27 @@ public class CartController {
         return new BaseResponse<>(result);
     }
 
-    // 상품 삭제 API(22)
-    @DeleteMapping("")
-    public BaseResponse<String> deleteOrder(@RequestParam int ordersNum) throws BaseException{
-        String result="상품 삭제 실패";
-        if(cartService.deleteOrdersAndCart(ordersNum)){
-            result="상품 삭제 성공";
+    // 상품 주문 API
+    @PostMapping("/orders/{userNum}")
+    public BaseResponse<String> postOrders(@PathVariable int userNum) throws BaseException{
+        String result="상품 주문 실패";
+        if(cartService.order(userNum)){
+            result="상품 주문 성공!";
         }
         return new BaseResponse<>(result);
     }
+
+    // 주문 삭제 API(22)
+    @DeleteMapping("")
+    public BaseResponse<String> deleteOrder(@RequestParam int ordersNum) throws BaseException{
+        String result="주문 삭제 실패";
+        if(cartService.deleteOrders(ordersNum)){
+            result="주문 삭제 성공";
+        }
+        return new BaseResponse<>(result);
+    }
+
+
 
 
 }

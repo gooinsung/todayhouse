@@ -15,7 +15,7 @@ public class PatchOrderCntRequest {
 
     @NotBlank
     @Positive
-    private int orderCnt;
+    private int orderCnt; // 변경할 개수
 
 
 }

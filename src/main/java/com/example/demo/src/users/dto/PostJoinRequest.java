@@ -21,13 +21,13 @@ public class PostJoinRequest {
     
     // 마케딩 활용 동의
     @PositiveOrZero
-    @Min(value=1)
+    @Min(value=0)
     @Max(value=1)
     private int agree1;
     
     // 메세지 수신 동의
     @PositiveOrZero
-    @Min(value=1)
+    @Min(value=0)
     @Max(value=1)
     private int agree2;
 

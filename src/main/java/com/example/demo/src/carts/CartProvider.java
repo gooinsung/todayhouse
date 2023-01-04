@@ -32,6 +32,7 @@ public class CartProvider {
             for (Cart cart:cartList){
                 totalPrice+=cart.getPrice();
             }
+         /*   int cartNum=cartDao.getCartNum(userNum);*/
             response.setCartList(cartList);
             response.setTotalPrice(totalPrice);
             response.setUserNum(userNum);

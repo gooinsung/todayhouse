@@ -53,7 +53,7 @@ public class ProductController {
 
     // 상품 리뷰 작성(4)
     @PostMapping("/{productNum}/review/write")
-    public BaseResponse<String> postReview(@PathVariable int productNum,@RequestPart PostReviewRequest req,@RequestPart MultipartFile file) throws BaseException,IOException{
+    public BaseResponse<String> postReview(@PathVariable int productNum,@RequestPart PostReviewRequest req,@RequestPart(required = false) MultipartFile file) throws BaseException,IOException{
         String message="리뷰 작성 실패";
         if(productService.postReview(req,file,productNum)){
             message="리뷰 작성 성공";
@@ -63,7 +63,7 @@ public class ProductController {
 
     // 상품 리뷰 수정(5)
     @PatchMapping("/{productNum}/review/write")
-    public BaseResponse<String> patchReview(@PathVariable int productNum,@RequestPart PatchReviewRequest req,@RequestPart MultipartFile file,@RequestParam int reviewNum) throws BaseException, IOException{
+    public BaseResponse<String> patchReview(@PathVariable int productNum,@RequestPart PatchReviewRequest req,@RequestPart(required = false) MultipartFile file,@RequestParam int reviewNum) throws BaseException, IOException{
         String result="리뷰 수정 실패";
         if(productService.patchReview(req,file,reviewNum)){
             result="리뷰 수정 성공";

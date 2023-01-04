@@ -3,6 +3,7 @@ package com.example.demo.src.carts;
 import com.example.demo.src.carts.dto.CreateOrderAndCartSaveDto;
 import com.example.demo.src.carts.dto.PatchOrderCntRequest;
 import com.example.demo.src.carts.dto.object.Cart;
+import com.example.demo.src.carts.dto.object.OrderMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,37 +27,14 @@ public class CartDao {
 
     // 주문 추가
     @Transactional
-    public int insertOrderAndCart(CreateOrderAndCartSaveDto req){
+    public int insertOrder(CreateOrderAndCartSaveDto req){
         int result=0;
         String query="insert into orders (productNum,userNum,orderCnt,price) values(?,?,?,?)";
         Object[] insertParam=new Object[]{req.getProductNum(),req.getUserNum(),req.getOrderCnt(),req.getOrderPrice()};
-       if(this.jdbcTemplate.update(query,insertParam)==1){
-           String query1="select last_insert_id() as ordersNum";
-           int ordersNum=this.jdbcTemplate.queryForObject(query1, new RowMapper<Integer>() {
-               @Override
-               public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                   return rs.getInt("ordersNum");
-               }
-           });
-           result=this.insertCart(req.getUserNum(),ordersNum);
-       }
-       return result;
-/*        String query1="select last_insert_id() as ordersNum";
-        int ordersNum=this.jdbcTemplate.queryForObject(query, new RowMapper<Integer>() {
-            @Override
-            public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return rs.getInt("ordersNum");
-            }
-        });
-        return this.insertCart(req.getUserNum(),ordersNum);*/
+       return this.jdbcTemplate.update(query,insertParam);
+
     }
-    // 장바구니에 추가
-    public int insertCart(int userNum,int ordersNum){
-        String query="insert into productCartMap (userNum,orderNum) values(?,?)";
-        Object[] insertParam=new Object[]{userNum,ordersNum};
-        return this.jdbcTemplate.update(query,insertParam);
-    }
-    
+
 
     // 장바구니 조회
     public List<Cart> getCarts(int userNum){
@@ -77,6 +55,7 @@ public class CartDao {
         },userNum);
     }
 
+
     // 상품 주문 수량 수정
     public int updateOrderCnt(PatchOrderCntRequest req){
         String query="update orders set orderCnt=? where ordersNum=?";
@@ -86,18 +65,31 @@ public class CartDao {
 
     // 장바구니 삭제
     @Transactional
-    public int deleteOrdersAndCart(int ordersNum){
-        int result=0;
-        String query="delete from productCartMap where orderNum=?";
-        if(this.jdbcTemplate.update(query,ordersNum)==1){
-            result= this.deleteCart(ordersNum);
-        }
-        return result;
-    }
-
-    // 주문 삭제 API
-    public int deleteCart(int ordersNum){
-        String query="delete from orders where ordersNum=?";
+    public int deleteOrders(int ordersNum){
+        String query="update orders set status='inactive' where ordersNum=?";
         return this.jdbcTemplate.update(query,ordersNum);
     }
+
+    // 장바구니 주문하기
+    public List<OrderMap> getOrderMap(int userNum){
+        String query="select productNum,orderCnt from orders where status='active' userNum=?";
+        return this.jdbcTemplate.query(query, new RowMapper<OrderMap>() {
+            @Override
+            public OrderMap mapRow(ResultSet rs, int rowNum) throws SQLException {
+                OrderMap res= new OrderMap();
+                res.setProductNum(rs.getInt("productNum"));
+                res.setOrderCnt(rs.getInt("orderCnt"));
+                return res;
+            }
+        },userNum);
+    }
+
+    // 장바구니 주문
+    public int changeOrderStatus(int userNum){
+        String query="update orders set status='ordered' where userNum=?";
+        return this.jdbcTemplate.update(query,userNum);
+    }
+
+
+
 }

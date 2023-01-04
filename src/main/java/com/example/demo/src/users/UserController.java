@@ -59,14 +59,15 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
+    public /*ResponseEntity<String>*/BaseResponse<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
         String result="로그인 실패";
         if(userService.loginUser(postLoginRequest)){
             result="로그인 성공";
             String jwt= jwtProvider.createJwt(postLoginRequest.getUserEmail());
             response.setHeader("jwt",jwt);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return new BaseResponse<>(result);
+     /*   return ResponseEntity.status(HttpStatus.OK).body(result);*/
     }
 
 

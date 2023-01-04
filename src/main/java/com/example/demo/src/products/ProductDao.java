@@ -1,5 +1,6 @@
 package com.example.demo.src.products;
 
+import com.example.demo.src.carts.dto.object.OrderMap;
 import com.example.demo.src.products.dto.*;
 import com.example.demo.src.products.dto.object.Product;
 import com.example.demo.src.products.dto.object.SaveReviewDTO;
@@ -26,7 +27,7 @@ public class ProductDao {
 
     // 게시글 상세정보 가져오기
     public Product getProductDetail(int productNum){
-        String query= "select count(r.reviewNum) as cnt, p.productNum, p.productName, p.productPrice, p.productInfo, p.productCate, p.thumbnail, p.productCom, r.pointAvg from product p left join review r on p.productNum= r.productNum where p.productNum=?";
+        String query= "select count(r.reviewNum) as cnt, p.productNum, p.productName, p.productPrice, p.productInfo, p.productCate, p.thumbnail, p.productCom, r.pointAvg from product p left join review r on p.productNum= r.productNum where p.status='active' and p.productNum=?";
         GetProductDetailResponse response= new GetProductDetailResponse(); 
         return this.jdbcTemplate.queryForObject(query, new RowMapper<Product>() {
             @Override
@@ -48,7 +49,7 @@ public class ProductDao {
 
     // 게시글 상세정보를 위한 이미지 가져오기
     public List<String> getProductImgs(int productNum){
-        String query="select storedFilename from productPics where productNum=?";
+        String query="select storedFilename from productPics where and status='active' and productNum=?";
         return this.jdbcTemplate.query(query, new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -60,7 +61,7 @@ public class ProductDao {
 
     // 리뷰 조회
     public List<GetReviewResponse> getReviews(int productNum){
-        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.productNum=?";
+        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.status='active' and r.productNum=?";
         return this.jdbcTemplate.query(query, new RowMapper<GetReviewResponse>() {
             @Override
             public GetReviewResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -82,7 +83,7 @@ public class ProductDao {
 
     // 특정 리뷰 조회
     public GetReviewResponse getReview(int reviewNum){
-        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.reviewNum=?";
+        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.status='active' and r.reviewNum=?";
         return this.jdbcTemplate.queryForObject(query, new RowMapper<GetReviewResponse>() {
             @Override
             public GetReviewResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -116,9 +117,9 @@ public class ProductDao {
         return this.jdbcTemplate.update(query,updateParam);
     }
 
-    // 게시글 리스트 가져오기
+    // 상품 리스트 가져오기
     public List<GetProductResponse> getProductList(){
-        String query= "select p.productNum, p.productName, p.productPrice, p.thumbnail, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg from product p";
+        String query= "select p.productNum, p.productName, p.productPrice, p.thumbnail, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg from product p where status='active'";
         return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
             @Override
             public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -139,7 +140,7 @@ public class ProductDao {
 
     // 상품 정보 가져오는 메서드
     public Product getProductInfo(int productNum){
-        String query="select productNum,productPrice from product where productNum=?";
+        String query="select productNum,productPrice from product where status='active' and productNum=?";
         return this.jdbcTemplate.queryForObject(query, new RowMapper<Product>() {
             @Override
             public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -157,6 +158,17 @@ public class ProductDao {
         return this.jdbcTemplate.update(query,reviewNum);
     }
 
+
+
+    public int reduceProductCnt(List<OrderMap> maps){
+        String query="update product set productCnt=productCnt-? where productNum=?";
+        int cnt=0;
+        for(OrderMap map:maps){
+            Object[] updateParam= new Object[]{map.getOrderCnt(),map.getProductNum()};
+            if(this.jdbcTemplate.update(query,updateParam)==1) cnt++;
+        }
+        return cnt;
+    }
 
 
 
