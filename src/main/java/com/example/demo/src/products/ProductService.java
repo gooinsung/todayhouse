@@ -1,10 +1,9 @@
 package com.example.demo.src.products;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.products.dto.ExamRequest;
-import com.example.demo.src.products.dto.ExamSaveDTO;
-import com.example.demo.src.products.dto.PostReviewRequest;
-import com.example.demo.src.products.dto.SaveReviewDTO;
+import com.example.demo.src.products.dto.*;
+import com.example.demo.src.products.dto.object.SaveReviewDTO;
+import com.example.demo.src.products.dto.object.UpdateReviewDTO;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
 public class ProductService {
@@ -32,14 +32,47 @@ public class ProductService {
     }
 
     public boolean postReview(PostReviewRequest req,MultipartFile file, int productNum)throws BaseException, IOException {
-        boolean result= false;
-        String savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
-        System.out.println(savedUrl);
-        SaveReviewDTO dto= new SaveReviewDTO(req, savedUrl,productNum);
-        if(productDao.insertReview(dto)==1){
-            result=true;
+        try{
+            boolean result= false;
+            String savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
+            SaveReviewDTO dto= new SaveReviewDTO(req, savedUrl,productNum);
+            if(productDao.insertReview(dto)==1){
+                result=true;
+            }
+            return result;
+        }catch(Exception exception){
+            logger.error("App - postReview ProductService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
         }
-        return result;
+
+    }
+
+    public boolean patchReview(PatchReviewRequest req,MultipartFile file, int reviewNum) throws BaseException,IOException{
+        try{
+            boolean result=false;
+            String savedFile= s3Uploader.uploadFiles(file,"todayhouse");
+            UpdateReviewDTO dto= new UpdateReviewDTO(req,savedFile,reviewNum);
+            if(productDao.updateReview(dto)==1){
+                result=true;
+            }
+            return result;
+        }catch (Exception exception){
+            logger.error("App - patchReview ProductService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public boolean deleteReview(int reviewNum) throws BaseException{
+        try{
+            boolean result=false;
+            if(productDao.deleteReview(reviewNum)==1){
+                result=true;
+            }
+            return result;
+        }catch (Exception exception){
+            logger.error("App - deleteReview ProductService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
 

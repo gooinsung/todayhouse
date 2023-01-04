@@ -1,5 +1,6 @@
-package com.example.demo.src.products.dto;
+package com.example.demo.src.products.dto.object;
 
+import com.example.demo.src.products.dto.PostReviewRequest;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,11 +15,10 @@ public class SaveReviewDTO {
     private int point4;
     private int productNum;
     private String filename;
-
     private int pointAvg;
 
     @Builder
-    public SaveReviewDTO(PostReviewRequest request, String filename,int productNum){
+    public SaveReviewDTO(PostReviewRequest request, String filename, int productNum){
         this.userNum=request.getUserNum();
         this.reviewContent=request.getReviewContent();
         this.point1=request.getPoint1();

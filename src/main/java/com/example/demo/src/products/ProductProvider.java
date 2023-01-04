@@ -3,6 +3,7 @@ package com.example.demo.src.products;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.products.dto.GetProductDetailResponse;
 import com.example.demo.src.products.dto.GetProductResponse;
+import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.products.dto.object.GetProduct;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.AssertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class ProductProvider {
             List<GetProductResponse> getProducts = productDao.getProductList();
             return getProducts;
         }catch(Exception exception){
-            logger.error("App - getProductList Provider Error", exception);
+            logger.error("App - getProductList ProductProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
 
@@ -50,7 +52,27 @@ public class ProductProvider {
             response.setProductImg(productDao.getProductImgs(productNum));
             return response;
         }catch (Exception exception){
-            logger.error("App - getProductDetailResponse1 Provider Error", exception);
+            logger.error("App - getProductDetailResponse1 ProductProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    public List<GetReviewResponse> getReviews(int productNum) throws BaseException,IOException{
+        try{
+            return productDao.getReviews(productNum);
+        }catch (Exception exception){
+            logger.error("App - getReviews ProductProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    public GetReviewResponse getReview(int reviewNum) throws BaseException,IOException{
+        try{
+            return productDao.getReview(reviewNum);
+        }catch (Exception exception){
+            logger.error("App - getReview ProductProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

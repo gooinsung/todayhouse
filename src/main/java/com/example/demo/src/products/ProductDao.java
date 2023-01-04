@@ -1,8 +1,9 @@
 package com.example.demo.src.products;
 
 import com.example.demo.src.products.dto.*;
-import com.example.demo.src.products.dto.object.GetProduct;
 import com.example.demo.src.products.dto.object.Product;
+import com.example.demo.src.products.dto.object.SaveReviewDTO;
+import com.example.demo.src.products.dto.object.UpdateReviewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,11 +58,62 @@ public class ProductDao {
         },productNum);
     }
 
+    // 리뷰 조회
+    public List<GetReviewResponse> getReviews(int productNum){
+        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.productNum=?";
+        return this.jdbcTemplate.query(query, new RowMapper<GetReviewResponse>() {
+            @Override
+            public GetReviewResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetReviewResponse response= new GetReviewResponse();
+                response.setReviewNum(rs.getInt("reviewNum"));
+                response.setPoint1(rs.getInt("point1"));
+                response.setPoint2(rs.getInt("point2"));
+                response.setPoint3(rs.getInt("point3"));
+                response.setPoint4(rs.getInt("point4"));
+                response.setPointAvg(rs.getFloat("pointAvg"));
+                response.setCreatedAt(rs.getTimestamp("createdAt"));
+                response.setReviewImg(rs.getString("storedFilename"));
+                response.setReviewContent(rs.getString("reviewContent"));
+                response.setUserNickName(rs.getString("userNickName"));
+                return response;
+            }
+        },productNum);
+    }
+
+    // 특정 리뷰 조회
+    public GetReviewResponse getReview(int reviewNum){
+        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.reviewNum=?";
+        return this.jdbcTemplate.queryForObject(query, new RowMapper<GetReviewResponse>() {
+            @Override
+            public GetReviewResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetReviewResponse response= new GetReviewResponse();
+                response.setReviewNum(rs.getInt("reviewNum"));
+                response.setPoint1(rs.getInt("point1"));
+                response.setPoint2(rs.getInt("point2"));
+                response.setPoint3(rs.getInt("point3"));
+                response.setPoint4(rs.getInt("point4"));
+                response.setPointAvg(rs.getFloat("pointAvg"));
+                response.setCreatedAt(rs.getTimestamp("createdAt"));
+                response.setReviewImg(rs.getString("storedFilename"));
+                response.setReviewContent(rs.getString("reviewContent"));
+                response.setUserNickName(rs.getString("userNickName"));
+                return response;
+            }
+        },reviewNum);
+    }
+
     // 리뷰 작성
     public int insertReview(SaveReviewDTO dto){
         String query="insert into review (reviewContent,storedFilename,point1,point2,point3,point4,productNum,userNum,pointAvg) values(?,?,?,?,?,?,?,?,?)";
         Object[] insertReviewParam= new Object[]{dto.getReviewContent(),dto.getFilename(),dto.getPoint1(),dto.getPoint2(),dto.getPoint3(),dto.getPoint4(),dto.getProductNum(),dto.getUserNum(),dto.getPointAvg()};
         return this.jdbcTemplate.update(query,insertReviewParam);
+    }
+
+    // 리뷰 수정
+    public int updateReview(UpdateReviewDTO dto){
+        String query="update review set reviewContent=?,storedFilename=?, point1=?, point2=?, point3=?, point4=?, pointAvg=? where reviewNum=?";
+        Object [] updateParam=new Object[]{dto.getReviewContent(),dto.getFilename(),dto.getPoint1(),dto.getPoint2(),dto.getPoint3(),dto.getPoint4(),dto.getPointAvg(),dto.getReviewNum()};
+        return this.jdbcTemplate.update(query,updateParam);
     }
 
     // 게시글 리스트 가져오기
@@ -99,6 +151,12 @@ public class ProductDao {
         },productNum);
     }
 
+    // 리뷰 삭제 메서드
+    public int deleteReview(int reviewNum){
+        String query="update review set status='inactive' where reviewNum=?";
+        return this.jdbcTemplate.update(query,reviewNum);
+    }
+
 
 
 
@@ -133,5 +191,6 @@ public class ProductDao {
             this.jdbcTemplate.update(query,insertParam);
         }
     }
+
 
 }
