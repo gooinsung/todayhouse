@@ -38,7 +38,7 @@ public class CartDao {
 
     // 장바구니 조회
     public List<Cart> getCarts(int userNum){
-        String query="select p.productNum, p.thumbnail, p.productName, o.price, o.ordersNum, o.orderCnt from orders o inner join product p on o.productNum=p.productNum where o.userNum=? ";
+        String query="select p.productNum, p.thumbnail, p.productName, o.price, o.ordersNum, o.orderCnt from orders o inner join product p on o.productNum=p.productNum where o.status='active' and o.userNum=? ";
         return this.jdbcTemplate.query(query, new RowMapper<Cart>() {
             @Override
             public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -49,7 +49,7 @@ public class ProductDao {
 
     // 게시글 상세정보를 위한 이미지 가져오기
     public List<String> getProductImgs(int productNum){
-        String query="select storedFilename from productPics where and status='active' and productNum=?";
+        String query="select storedFilename from productPics where productNum=?";
         return this.jdbcTemplate.query(query, new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -119,7 +119,7 @@ public class ProductDao {
 
     // 상품 리스트 가져오기
     public List<GetProductResponse> getProductList(){
-        String query= "select p.productNum, p.productName, p.productPrice, p.thumbnail, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg from product p where status='active'";
+        String query= "select p.productNum, p.productName, p.productPrice, p.thumbnail, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg from product p where p.status='active'";
         return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
             @Override
             public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
