@@ -107,13 +107,14 @@ public class ProductController {
 
     // 테스트 데이터 삽입을 위한 메서드(지울것)
     @PostMapping("")
-    public BaseResponse<String> postProduct(@RequestPart ExamRequest examRequest, @RequestPart MultipartFile thumbnail, @RequestPart MultipartFile[] files)throws BaseException,IOException{
+    public BaseResponse<String> postProduct(@RequestPart ExamRequest examRequest, @RequestPart MultipartFile[] thumbnails, @RequestPart MultipartFile[] files)throws BaseException,IOException{
         String result="실패";
-        if(productService.postProduct(examRequest,thumbnail,files)){
+        if(productService.postProduct(examRequest,thumbnails,files)){
             result="성공!";
         }
         return new BaseResponse<>(result);
     }
+
 
 
 }

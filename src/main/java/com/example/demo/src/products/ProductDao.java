@@ -5,9 +5,11 @@ import com.example.demo.src.products.dto.*;
 import com.example.demo.src.products.dto.object.Product;
 import com.example.demo.src.products.dto.object.SaveReviewDTO;
 import com.example.demo.src.products.dto.object.UpdateReviewDTO;
+import com.example.demo.utils.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -20,6 +22,7 @@ public class ProductDao {
 
     private JdbcTemplate jdbcTemplate;
 
+
     @Autowired
     public void setDataSource(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -27,7 +30,7 @@ public class ProductDao {
 
     // 게시글 상세정보 가져오기
     public Product getProductDetail(int productNum){
-        String query= "select count(r.reviewNum) as cnt, p.productNum, p.productName, p.productPrice, p.productInfo, p.productCate, p.thumbnail, p.productCom, r.pointAvg from product p left join review r on p.productNum= r.productNum where p.status='active' and p.productNum=?";
+        String query= "select count(r.reviewNum) as cnt, p.productNum, p.productName, p.productPrice, p.productInfo, p.productCate, p.productCom, r.pointAvg from product p left join review r on p.productNum= r.productNum where p.status='active' and p.productNum=?";
         GetProductDetailResponse response= new GetProductDetailResponse(); 
         return this.jdbcTemplate.queryForObject(query, new RowMapper<Product>() {
             @Override
@@ -39,10 +42,20 @@ public class ProductDao {
                 product.setProductName(rs.getString("productName"));
                 product.setProductPrice(rs.getInt("productPrice"));
                 product.setProductCate(rs.getInt("productCate"));
-                product.setThumbnail(rs.getString("thumbnail"));
                 product.setProductCom(rs.getString("productCom"));
                 product.setReviewAvg(rs.getFloat("pointAvg"));
                 return product;
+            }
+        },productNum);
+    }
+
+    // 게시글 썸네일 이미지 가져오기
+    public List<String> getThumbnails(int productNum){
+        String query="select thumbnail from productThumbnails where productNum=?";
+        return this.jdbcTemplate.query(query, new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("thumbnail");
             }
         },productNum);
     }
@@ -119,7 +132,8 @@ public class ProductDao {
 
     // 상품 리스트 가져오기
     public List<GetProductResponse> getProductList(){
-        String query= "select p.productNum, p.productName, p.productPrice, p.thumbnail, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg from product p where p.status='active'";
+        String query= "select p.productNum, p.productName, p.productPrice, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg,(select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail from product p where p.status='active'";
+        GetProductResponse response= new GetProductResponse();
         return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
             @Override
             public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -128,15 +142,16 @@ public class ProductDao {
                 response.setProductName(rs.getString("productName"));
                 response.setProductPrice(rs.getInt("productPrice"));
                 response.setProductCate(rs.getInt("productCate"));
-                response.setThumbnail(rs.getString("thumbnail"));
                 response.setReviewCnt(rs.getInt("reviewCnt"));
                 response.setProductCom(rs.getString("productCom"));
                 response.setReviewAvg(rs.getFloat("reviewAvg"));
+                response.setThumbnail(rs.getString("thumbnail"));
+
                 return response;
             }
         });
-
     }
+
 
     // 상품 정보 가져오는 메서드
     public Product getProductInfo(int productNum){
@@ -159,7 +174,7 @@ public class ProductDao {
     }
 
 
-
+    // 상품 주문시 상품 개수 줄이기
     public int reduceProductCnt(List<OrderMap> maps){
         String query="update product set productCnt=productCnt-? where productNum=?";
         int cnt=0;
@@ -178,31 +193,44 @@ public class ProductDao {
 
 
     // 테스트 데이터 작성 메서드
-    public int postProduct(ExamSaveDTO req,List<String> filenames){
+    public int postProduct(ExamSaveDTO req,List<String> filenames, List<String> savedThumbnails){
         int result=0;
-        String query="insert into product (productName,productPrice,productInfo,productCate,productCnt,thumbnail) values(?,?,?,?,?,?)";
-        Object[] insertParam= new Object[]{req.getProductName(),req.getProductPrice(),req.getProductInfo(),req.getProductCate(),req.getProductCnt(),req.getThumbnail()};
+        int productNum=0;
+        String query="insert into product (productName,productPrice,productInfo,productCate,productCnt) values(?,?,?,?,?)";
+        Object[] insertParam= new Object[]{req.getProductName(),req.getProductPrice(),req.getProductInfo(),req.getProductCate(),req.getProductCnt()};
         if(this.jdbcTemplate.update(query,insertParam)==1){
             String query1="select last_insert_id() as productNum";
-            int productNum=this.jdbcTemplate.queryForObject(query1, new RowMapper<Integer>() {
+            productNum=this.jdbcTemplate.queryForObject(query1, new RowMapper<Integer>() {
                 @Override
                 public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
                     return rs.getInt("productNum");
                 }
             });
             this.postProductPics(filenames,productNum);
+            this.postProductThumbnails(savedThumbnails,productNum);
             result=1;
         }
         return result;
 
     }
+
+    public void postProductThumbnails(List<String> thumbnails,int productNum){
+        String query="insert into productThumbnails (thumbnail,productNum) values(?,?)";
+        for(String thumbnail:thumbnails){
+            Object[] insertThumbnailParam= new Object[]{thumbnail,productNum};
+            this.jdbcTemplate.update(query,insertThumbnailParam);
+        }
+    }
+
     public void postProductPics(List<String> filenames,int productNum){
         String query="insert into productPics (storedFilename,productNum) values(?,?)";
         for(String filename:filenames){
-            Object[] insertParam= new Object[]{filename,productNum};
-            this.jdbcTemplate.update(query,insertParam);
+            Object[] insertPicsParam= new Object[]{filename,productNum};
+            this.jdbcTemplate.update(query,insertPicsParam);
         }
     }
+
+
 
 
 }

@@ -50,6 +50,7 @@ public class ProductProvider {
             GetProductDetailResponse response= new GetProductDetailResponse();
             response.setProduct(productDao.getProductDetail(productNum));
             response.setProductImg(productDao.getProductImgs(productNum));
+            response.setThumbnails(productDao.getThumbnails(productNum));
             return response;
         }catch (Exception exception){
             logger.error("App - getProductDetailResponse1 ProductProvider Error", exception);

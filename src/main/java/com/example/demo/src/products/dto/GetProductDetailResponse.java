@@ -10,5 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 public class GetProductDetailResponse {
     private Product product;
-    private List<String> productImg= new ArrayList<>();
+    private List<String> productImg;
+    private List<String> thumbnails;
 }

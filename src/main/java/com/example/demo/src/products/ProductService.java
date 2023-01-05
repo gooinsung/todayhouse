@@ -101,17 +101,26 @@ public class ProductService {
 
     @Transactional
     // 테스트 데이터 입력용 메서드
-    public boolean postProduct(ExamRequest request,MultipartFile thumbnail,MultipartFile[] files)throws BaseException,IOException{
+    public boolean postProduct(ExamRequest request,MultipartFile[] thumbnails,MultipartFile[] files)throws BaseException,IOException{
         boolean result= false;
-        String savedThumbnail=s3Uploader.uploadFiles(thumbnail,"todayhouse");
-        ExamSaveDTO dto= new ExamSaveDTO(request,savedThumbnail);
+        List<String> savedThumbnails= new ArrayList<>();
+        for(MultipartFile thumbnail:thumbnails){
+            savedThumbnails.add(s3Uploader.uploadFiles(thumbnail,"todayhouse"));
+        }
+
+        ExamSaveDTO dto= new ExamSaveDTO(request);
         List<String> filenames= new ArrayList<>();
         for(MultipartFile file:files){
             filenames.add(s3Uploader.uploadFiles(file,"todayhouse"));
         }
-        if(productDao.postProduct(dto,filenames)==1){
+
+        if(productDao.postProduct(dto,filenames,savedThumbnails)==1){
             result=true;
         }
         return result;
+    }
+
+    public void deleteAllProductPics(){
+
     }
 }

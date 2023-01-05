@@ -10,7 +10,6 @@ public class Product{
     private int productPrice;
     private String productInfo;
     private int productCate;
-    private String thumbnail;
     private int reviewCnt;
     private String productCom;
     private float reviewAvg;
