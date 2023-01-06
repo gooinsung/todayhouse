@@ -1,6 +1,7 @@
 package com.example.demo.src.users;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponse;
 import com.example.demo.src.users.dto.PostJoinRequest;
 import com.example.demo.src.users.dto.PostLoginRequest;
 import com.example.demo.utils.S3Uploader;

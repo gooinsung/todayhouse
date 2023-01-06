@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sound.midi.Patch;
+import javax.swing.*;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,8 +65,19 @@ public class ContentController {
     @PatchMapping("/{contentNum}")
     public BaseResponse<String> modifyContent(@PathVariable int contentNum, @RequestPart @Validated PatchContentRequest patchContentRequest, @RequestPart MultipartFile contentImg) throws BaseException,IOException{
         String result=" 게시글 수정 실패";
+        if(contentService.modifyContent(contentNum,patchContentRequest, contentImg)){
+            result="게시글 수정 성공";
+        }
+        return new BaseResponse<>(result);
+    }
 
-
+    // 게시글 삭제 API(15)
+    @DeleteMapping("/{contentNum}")
+    public BaseResponse<String> deleteContent(@PathVariable int contentNum) throws BaseException{
+        String result="게시글 삭제 실패";
+        if(contentService.deleteContent(contentNum)){
+            result="게시글 삭제 성공";
+        }
         return new BaseResponse<>(result);
     }
 

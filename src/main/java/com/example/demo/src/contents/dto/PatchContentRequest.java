@@ -32,7 +32,6 @@ public class PatchContentRequest {
 
     private String contentTitle;
 
-    @Null
     private List<String> keywords;
 
     private String contentImg;

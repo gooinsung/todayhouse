@@ -15,11 +15,18 @@ public class ControllerException {
 
     final Logger logger= LoggerFactory.getLogger(ControllerException.class);
 
-    @ExceptionHandler(BaseException.class)
+    @ExceptionHandler(NullPointerException.class)
     public BaseResponse nullPointExceptionHandler(NullPointerException e){
+        logger.error("Controller 내 NullPointerException 발생");
+        return new BaseResponse(DATABASE_ERROR);
+    }
+
+    @ExceptionHandler(BaseException.class)
+    public BaseResponse BaseExceptionHandler(BaseException e){
         logger.error("Controller 내 BaseException 발생");
         return new BaseResponse(DATABASE_ERROR);
     }
+
 
 /*    @ExceptionHandler(IOException.class)
     public BaseResponse IOExceptionHandler(IOException e){

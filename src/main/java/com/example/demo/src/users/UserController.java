@@ -34,7 +34,7 @@ public class UserController {
         this.userService = userService;
         this.jwtProvider=jwtProvider;
     }
-
+/*
     // 회원가입
     @PostMapping("/join")
     public BaseResponse<String> join(@Validated @RequestBody PostJoinRequest postJoinRequest) throws BaseException{
@@ -43,7 +43,7 @@ public class UserController {
             result="회원 가입 성공";
         }
         return new BaseResponse<>(result);
-    }
+    }*/
 
 /*    // 로그인
     @PostMapping("/login")
@@ -57,9 +57,9 @@ public class UserController {
         return new BaseResponse<>(result);
     }*/
 
-    // 로그인
+ /*   // 로그인
     @PostMapping("/login")
-    public /*ResponseEntity<String>*/BaseResponse<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
+    public *//*ResponseEntity<String>*//*BaseResponse<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
         String result="로그인 실패";
         if(userService.loginUser(postLoginRequest)){
             result="로그인 성공";
@@ -67,8 +67,8 @@ public class UserController {
             response.setHeader("jwt",jwt);
         }
         return new BaseResponse<>(result);
-     /*   return ResponseEntity.status(HttpStatus.OK).body(result);*/
-    }
+
+    }*/
 
 
 

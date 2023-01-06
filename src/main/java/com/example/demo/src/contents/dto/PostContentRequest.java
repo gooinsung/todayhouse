@@ -12,36 +12,30 @@ import java.util.List;
 public class PostContentRequest {
     @Min(value = 1)
     @Max(value = 9)
-    @NotBlank
     @Positive
     private int contentCate;
 
     @Min(value = 0)
     @Max(value = 5)
-    @NotBlank
-    @Positive
+    @PositiveOrZero
     private int size;
 
     @Min(value = 0)
     @Max(value = 6)
-    @NotBlank
-    @Positive
+    @PositiveOrZero
     private int form;
 
     @Min(value = 0)
     @Max(value = 7)
-    @NotBlank
-    @Positive
+    @PositiveOrZero
     private int style;
 
     @Positive
-    @NotBlank
     private int userNum;
 
     @NotBlank
     private String contentTitle;
 
-    @Null
     private List<String> keywords;
 
     private String contentImg;
