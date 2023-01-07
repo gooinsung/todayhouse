@@ -2,6 +2,8 @@ package com.example.demo.src;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.contents.ContentProvider;
+import com.example.demo.src.products.ProductProvider;
 import com.example.demo.src.users.UserService;
 import com.example.demo.src.users.dto.PostJoinRequest;
 import com.example.demo.src.users.dto.PostLoginRequest;
@@ -25,21 +27,29 @@ public class IndexController {
 
 
     private S3Uploader s3Uploader;
+    private ProductProvider productProvider;
+    private ContentProvider contentProvider;
     private UserService userService;
 
     private JwtProvider jwtProvider;
-
     @Autowired
-    public IndexController(S3Uploader s3Uploader, UserService userService, JwtProvider jwtProvider) {
+    public IndexController(S3Uploader s3Uploader, ProductProvider productProvider, ContentProvider contentProvider, UserService userService, JwtProvider jwtProvider) {
         this.s3Uploader = s3Uploader;
+        this.productProvider = productProvider;
+        this.contentProvider = contentProvider;
         this.userService = userService;
         this.jwtProvider = jwtProvider;
     }
 
 
+
     @GetMapping("")
-    public BaseResponse<String> home(){
-        return new BaseResponse<>("IndexPage");
+    public BaseResponse<IndexResponse> home() throws BaseException{
+        IndexResponse result= new IndexResponse();
+        result.setContents(contentProvider.getHomeContents());
+        result.setProducts(productProvider.getHomeProducts());
+        result.setFamousContents(contentProvider.getHomeFamousContents());
+        return new BaseResponse<>(result);
     }
 
     // 회원 가입 API(17)
@@ -54,7 +64,7 @@ public class IndexController {
 
     // 로그인 API(18)
     @PostMapping("/login")
-    public /*ResponseEntity<String>*/BaseResponse<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
+    public BaseResponse<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
         String result="로그인 실패";
         if(userService.loginUser(postLoginRequest)){
             result="로그인 성공";
@@ -64,11 +74,13 @@ public class IndexController {
         return new BaseResponse<>(result);
     }
 
-/*    // 스크랩 API(24)
+    // 스크랩 API(24)
     @PostMapping("")
-    public String scrap(@RequestParam int userNum, @RequestParam(required = false) int contentNum, @RequestPart(required = false) int productNum) throws BaseException{
-        if(contentNum!=0){
-
+    public BaseResponse<String> scrap(@RequestParam int userNum, @RequestParam String type, @RequestParam int number) throws BaseException{
+        String result="스크랩북 추가 실패";
+        if(userService.addScrap(userNum,type,number)){
+            result="스크랩북 추가 성공";
         }
-    }*/
+        return new BaseResponse<>(result);
+    }
 }

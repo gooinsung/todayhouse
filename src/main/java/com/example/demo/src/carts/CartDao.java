@@ -72,7 +72,7 @@ public class CartDao {
 
     // 장바구니 주문하기
     public List<OrderMap> getOrderMap(int userNum){
-        String query="select productNum,orderCnt from orders where status='active' userNum=?";
+        String query="select productNum,orderCnt from orders where status='active' and userNum=?";
         return this.jdbcTemplate.query(query, new RowMapper<OrderMap>() {
             @Override
             public OrderMap mapRow(ResultSet rs, int rowNum) throws SQLException {

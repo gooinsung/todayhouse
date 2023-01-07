@@ -1,6 +1,7 @@
 package com.example.demo.src.products;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.products.dto.GetHomeProduct;
 import com.example.demo.src.products.dto.GetProductDetailResponse;
 import com.example.demo.src.products.dto.GetProductResponse;
 import com.example.demo.src.products.dto.GetReviewResponse;
@@ -74,6 +75,16 @@ public class ProductProvider {
             return productDao.getReview(reviewNum);
         }catch (Exception exception){
             logger.error("App - getReview ProductProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    public List<GetHomeProduct> getHomeProducts()throws BaseException{
+        try{
+            return productDao.getHomeProducts();
+        }catch (Exception exception){
+            logger.error("App - getHomeProducts ProductProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

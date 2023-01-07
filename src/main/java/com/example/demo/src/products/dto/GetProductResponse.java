@@ -1,12 +1,6 @@
 package com.example.demo.src.products.dto;
 
-import com.example.demo.src.products.dto.object.GetProduct;
 import lombok.*;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

@@ -2,8 +2,10 @@ package com.example.demo.src.users;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.users.dto.GetScrapResponse;
 import com.example.demo.src.users.dto.PostJoinRequest;
 import com.example.demo.src.users.dto.PostLoginRequest;
+import com.example.demo.src.users.dto.object.ScrapTypeNumber;
 import com.example.demo.utils.S3Uploader;
 import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
@@ -11,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -44,7 +49,7 @@ public class UserService {
             }
             return result;
         }catch (Exception exception){
-            logger.error("App - createUser Service Error", exception);
+            logger.error("App - createUser UserService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
@@ -65,7 +70,49 @@ public class UserService {
 
             return result;
         }catch(Exception exception){
-            logger.error("App - loginUser Service Error", exception);
+            logger.error("App - loginUser UserService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 스크랩 추가
+    public boolean addScrap(int userNum, String type, int number) throws BaseException{
+        try{
+            boolean result= false;
+            if(userDao.insertScrap(userNum,type,number)==1){
+                result=true;
+            }
+            return result;
+        }catch (Exception exception){
+            logger.error("App - addScrap UserService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 스크랩 조회
+    public List<GetScrapResponse> getScraps(int userNum) throws BaseException{
+        try{
+            List<GetScrapResponse> response= new ArrayList<>();
+            List<ScrapTypeNumber> tns=userDao.getTypeAndNumber(userNum);
+            for(ScrapTypeNumber tn:tns){
+                GetScrapResponse res=new GetScrapResponse();
+                if(tn.getType().equals("c")){
+                    res.setType(tn.getType());
+                    res.setNumber(tn.getNumber());
+                    res.setThumbnail(userDao.getContentThumbnail(tn.getNumber()));
+                }else{
+                    res.setType(tn.getType());
+                    res.setNumber(tn.getNumber());
+                    res.setThumbnail(userDao.getProductThumbnail(tn.getNumber()));
+                }
+
+                 response.add(res);
+
+            }
+
+            return response;
+        }catch (Exception exception){
+            logger.error("App - getScraps UserService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

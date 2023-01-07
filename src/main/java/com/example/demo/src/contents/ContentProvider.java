@@ -1,8 +1,12 @@
 package com.example.demo.src.contents;
 
+import com.amazonaws.util.EncodingSchemeEnum;
 import com.example.demo.config.BaseException;
+import com.example.demo.src.IndexResponse;
 import com.example.demo.src.contents.dto.GetContentDetailsResponse;
 import com.example.demo.src.contents.dto.GetContentResponse;
+import com.example.demo.src.contents.dto.GetHomeContent;
+import com.example.demo.src.contents.dto.GetHomeFamousContent;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +59,28 @@ public class ContentProvider {
             return contentDao.getContent(contentNum);
         }catch (Exception exception){
             logger.error("App - getContent ContentProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    // 홈 화면 구성 메서드
+    public List<GetHomeContent> getHomeContents() throws BaseException{
+        try{
+            return contentDao.getHomeContents();
+        }catch (Exception exception){
+            logger.error("App - getHomeContents ContentProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    // 홈 화면 인기 게시글
+    public List<GetHomeFamousContent> getHomeFamousContents() throws BaseException{
+        try{
+            return contentDao.getHomeFamousContents();
+        }catch (Exception exception){
+            logger.error("App - getHomeFamousContents ContentProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

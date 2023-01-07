@@ -194,6 +194,21 @@ public class ProductDao {
         return this.jdbcTemplate.update(query,insertParam);
     }
 
+    // 홈 화면 상품 리스트
+    public List<GetHomeProduct> getHomeProducts(){
+        String query="select p.productNum, p.productName, (select t.thumbnail from productThumbnails t where p.productNum=p.productNum limit 1) as thumbnail from product p order by productNum desc limit 4";
+        return this.jdbcTemplate.query(query, new RowMapper<GetHomeProduct>() {
+            @Override
+            public GetHomeProduct mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetHomeProduct res= new GetHomeProduct();
+                res.setProductNum(rs.getInt("productNum"));
+                res.setProductName(rs.getString("productName"));
+                res.setProductThumbnail(rs.getString("thumbnail"));
+                return res;
+            }
+        });
+    }
+
 
 
 

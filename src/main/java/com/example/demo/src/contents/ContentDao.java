@@ -1,9 +1,6 @@
 package com.example.demo.src.contents;
 
-import com.example.demo.src.contents.dto.GetContentDetailsResponse;
-import com.example.demo.src.contents.dto.GetContentResponse;
-import com.example.demo.src.contents.dto.PatchContentRequest;
-import com.example.demo.src.contents.dto.PostContentRequest;
+import com.example.demo.src.contents.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -159,5 +156,34 @@ public class ContentDao {
         String query="insert into scrap (userNum,contentNum) values(?,?)";
         Object[] insertParam=new Object[]{userNum,contentNum};
         return this.jdbcTemplate.update(query,insertParam);
+    }
+
+    // 홈 화면 게시글 리스트
+    public List<GetHomeContent> getHomeContents(){
+        String query="select contentNum,contentTitle,contentImg from content order by contentNum desc limit 4";
+        return this.jdbcTemplate.query(query, new RowMapper<GetHomeContent>() {
+            @Override
+            public GetHomeContent mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetHomeContent res= new GetHomeContent();
+                res.setContentNum(rs.getInt("contentNum"));
+                res.setContentTitle(rs.getString("contentTitle"));
+                res.setContentImg(rs.getString("contentImg"));
+                return res;
+            }
+        });
+    }
+    // 홈 화면 인기 게시글 리스트
+    public List<GetHomeFamousContent> getHomeFamousContents(){
+        String query="select c.contentNum,c.contentImg, (select u.userNickName from user u where u.userNum=c.userNum) as userNickName from content c order by contentNum desc limit 4 ";
+        return this.jdbcTemplate.query(query, new RowMapper<GetHomeFamousContent>() {
+            @Override
+            public GetHomeFamousContent mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetHomeFamousContent res= new GetHomeFamousContent();
+                res.setContentNum(rs.getInt("contentNum"));
+                res.setContentImg(rs.getString("contentImg"));
+                res.setUserNickName(rs.getString("userNickName"));
+                return res;
+            }
+        });
     }
 }
