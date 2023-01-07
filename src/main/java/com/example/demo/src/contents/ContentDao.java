@@ -136,4 +136,28 @@ public class ContentDao {
         String query="update content set status='inactive' where contentNum=?";
         return this.jdbcTemplate.update(query,contentNum);
     }
+
+    // 게시글 검색 메서드
+    public List<GetContentResponse> getContentBySearch(String search){
+        String query="select c.contentNum,c.contentImg,c.contentTitle,u.userNickName from content c inner join user u on c.userNum=u.userNum where c.status='active' and c.contentTitle like ?";
+        return this.jdbcTemplate.query(query, new RowMapper<GetContentResponse>() {
+            @Override
+            public GetContentResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetContentResponse res=new GetContentResponse();
+                res.setContentNum(rs.getInt("contentNum"));
+                res.setContentImg(rs.getString("contentImg"));
+                res.setContentTitle(rs.getString("contentTitle"));
+                res.setUserNickName(rs.getString("userNickName"));
+                return res;
+            }
+        },search);
+
+    }
+
+    // 게시글 스크랩 메서드
+    public int contentScrap(int userNum,int contentNum){
+        String query="insert into scrap (userNum,contentNum) values(?,?)";
+        Object[] insertParam=new Object[]{userNum,contentNum};
+        return this.jdbcTemplate.update(query,insertParam);
+    }
 }

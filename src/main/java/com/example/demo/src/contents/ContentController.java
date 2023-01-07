@@ -37,10 +37,17 @@ public class ContentController {
         this.contentService = contentService;
     }
 
-    // 전체 게시글 조회 API(11)
+    // 전체 게시글 조회 API(11), 게시글 검색 조회 API(16)
     @GetMapping("")
-    public BaseResponse<List<GetContentResponse>> getContents() throws BaseException{
-        List<GetContentResponse> responses= contentProvider.getContents();
+    public BaseResponse<List<GetContentResponse>> getContents(@RequestParam(required = false) String search) throws BaseException{
+        List<GetContentResponse> responses=new ArrayList<>();
+        if(search==null){
+           responses= contentProvider.getContents();
+        }
+        if(search!=null){
+            responses= contentProvider.getContentsBySearch(search);
+        }
+
         return new BaseResponse<>(responses);
     }
 
@@ -80,6 +87,9 @@ public class ContentController {
         }
         return new BaseResponse<>(result);
     }
+
+
+
 
 
 

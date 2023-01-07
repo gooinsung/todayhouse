@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ContentProvider {
         this.contentDao=contentDao;
         this.s3Uploader=s3Uploader;
     }
-
+    @Transactional
     // 전체 게시글 조회 메서드
     public List<GetContentResponse> getContents() throws BaseException{
         try{
@@ -36,6 +37,18 @@ public class ContentProvider {
         }
     }
 
+    @Transactional
+    // 게시글 검색 조회 메서드
+    public List<GetContentResponse> getContentsBySearch(String search) throws BaseException{
+        try{
+            String searchKeyword="%"+search+"%";
+            return contentDao.getContentBySearch(searchKeyword);
+        }catch (Exception exception){
+            logger.error("App - getContentsBySearch ContentProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    @Transactional
     // 특정 게시글 조회 메서드
     public GetContentDetailsResponse getContent(int contentNum) throws BaseException{
         try{

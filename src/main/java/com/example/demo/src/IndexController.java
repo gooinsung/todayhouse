@@ -7,6 +7,7 @@ import com.example.demo.src.users.dto.PostJoinRequest;
 import com.example.demo.src.users.dto.PostLoginRequest;
 import com.example.demo.utils.JwtProvider;
 import com.example.demo.utils.S3Uploader;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,13 @@ public class IndexController {
             response.setHeader("jwt",jwt);
         }
         return new BaseResponse<>(result);
-
     }
+
+/*    // 스크랩 API(24)
+    @PostMapping("")
+    public String scrap(@RequestParam int userNum, @RequestParam(required = false) int contentNum, @RequestPart(required = false) int productNum) throws BaseException{
+        if(contentNum!=0){
+
+        }
+    }*/
 }

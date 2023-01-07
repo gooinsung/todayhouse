@@ -74,7 +74,7 @@ public class ProductDao {
 
     // 리뷰 조회
     public List<GetReviewResponse> getReviews(int productNum){
-        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.status='active' and r.productNum=?";
+        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName , p.productName from review r inner join user u on r.userNum=u.userNum inner join product p on r.productNum=p.productNum where r.status='active' and r.productNum=?";
         return this.jdbcTemplate.query(query, new RowMapper<GetReviewResponse>() {
             @Override
             public GetReviewResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -89,6 +89,7 @@ public class ProductDao {
                 response.setReviewImg(rs.getString("storedFilename"));
                 response.setReviewContent(rs.getString("reviewContent"));
                 response.setUserNickName(rs.getString("userNickName"));
+                response.setProductName(rs.getString("productName"));
                 return response;
             }
         },productNum);
@@ -96,7 +97,7 @@ public class ProductDao {
 
     // 특정 리뷰 조회
     public GetReviewResponse getReview(int reviewNum){
-        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName as userNickName from review r inner join user u on r.userNum=u.userNum where r.status='active' and r.reviewNum=?";
+        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName, (select p.productName from product p where p.productNum=r.productNum) as productName from review r inner join user u on r.userNum=u.userNum where r.status='active' and r.reviewNum=?";
         return this.jdbcTemplate.queryForObject(query, new RowMapper<GetReviewResponse>() {
             @Override
             public GetReviewResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -111,6 +112,7 @@ public class ProductDao {
                 response.setReviewImg(rs.getString("storedFilename"));
                 response.setReviewContent(rs.getString("reviewContent"));
                 response.setUserNickName(rs.getString("userNickName"));
+                response.setProductName(rs.getString("productName"));
                 return response;
             }
         },reviewNum);
@@ -183,6 +185,13 @@ public class ProductDao {
             if(this.jdbcTemplate.update(query,updateParam)==1) cnt++;
         }
         return cnt;
+    }
+
+    // 상품 스크랩 메서드
+    public int productScrap(int userNum,int productNum){
+        String query="insert into scrap (userNum,productNum) values(?,?)";
+        Object[] insertParam=new Object[]{userNum,productNum};
+        return this.jdbcTemplate.update(query,insertParam);
     }
 
 

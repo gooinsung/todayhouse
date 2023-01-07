@@ -18,4 +18,5 @@ public class GetReviewResponse {
     private Timestamp createdAt;
     private String reviewImg;
     private String reviewContent;
+    private String productName;
 }

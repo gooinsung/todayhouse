@@ -21,6 +21,7 @@ spring:
 
 
 
+
 cloud:
   aws:
     s3:
@@ -33,4 +34,3 @@ cloud:
       auto: false
     stack:
       auto: false
-
