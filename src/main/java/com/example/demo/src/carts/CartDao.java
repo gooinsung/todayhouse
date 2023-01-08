@@ -38,7 +38,7 @@ public class CartDao {
 
     // 장바구니 조회
     public List<Cart> getCarts(int userNum){
-        String query="select p.productNum, (select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail, p.productName, o.price, o.ordersNum, o.orderCnt from orders o inner join product p on o.productNum=p.productNum where o.status='active' and o.userNum=? ";
+        String query="select p.productNum, p.productCom, (select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail, p.productName, o.price, o.ordersNum, o.orderCnt from orders o inner join product p on o.productNum=p.productNum where o.status='active' and o.userNum=? ";
         return this.jdbcTemplate.query(query, new RowMapper<Cart>() {
             @Override
             public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -49,7 +49,7 @@ public class CartDao {
                 cart.setPrice(rs.getInt("price"));
                 cart.setOrdersNum(rs.getInt("ordersNum"));
                 cart.setOrderCnt(rs.getInt("orderCnt"));
-
+                cart.setProductCom(rs.getString("productCom"));
                 return cart;
             }
         },userNum);

@@ -12,4 +12,5 @@ public class Cart {
     private int price;
     private int productNum;
     private int ordersNum;
+    private String productCom;
 }
