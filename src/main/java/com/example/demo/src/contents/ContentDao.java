@@ -207,6 +207,7 @@ public class ContentDao {
         },contentNum);
     }
 
+    // 자식 댓글 가져오기
     public List<GetContentComment> getChildComments(int parentCommentNum){
         String query="select cm.commentNum, cm.comment, cm.updatedAt, u.userNum, u.userNickName, u.userImg from contentComment cm inner join user u on cm.userNum=u.userNum where cm.parentCommentNum=?";
         return this.jdbcTemplate.query(query, new RowMapper<GetContentComment>() {
@@ -222,5 +223,12 @@ public class ContentDao {
                 return res;
             }
         },parentCommentNum);
+    }
+    
+    // 게시글 작성
+    public int insertComment(PostCommentRequest req){
+        String query="insert into contentComment (comment,userNum,contentNum) values(?,?,?)";
+        Object[] insertParam=new Object[]{req.getComment(),req.getUserNum(),req.getContentNum()};
+        return this.jdbcTemplate.update(query,insertParam);
     }
 }

@@ -99,6 +99,17 @@ public class ContentController {
         return new BaseResponse<>(comments);
     }
 
+    // 게시글 댓글 작성 API(26)
+    @PostMapping("/{contentNum}/comments/write")
+    public BaseResponse<String> postComment(@PathVariable int contentNum,@RequestBody @Validated PostCommentRequest postCommentRequest) throws BaseException{
+        String result="게시글 작성 실패";
+        if(contentService.postComment(postCommentRequest)){
+            result="게시글 작성 성공";
+        }
+        return new BaseResponse<>(result);
+    }
+
+
 
 
 

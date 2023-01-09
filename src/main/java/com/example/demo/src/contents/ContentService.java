@@ -2,6 +2,7 @@ package com.example.demo.src.contents;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.contents.dto.PatchContentRequest;
+import com.example.demo.src.contents.dto.PostCommentRequest;
 import com.example.demo.src.contents.dto.PostContentRequest;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
@@ -76,6 +77,21 @@ public class ContentService {
             return result;
         }catch (Exception exception){
             logger.error("App - deleteContent ContentService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 게시글 댓글 작성 메서드
+    @Transactional
+    public boolean postComment(PostCommentRequest request) throws BaseException{
+        try{
+            boolean result= false;
+            if(contentDao.insertComment(request)==1){
+                result= true;
+            }
+            return result;
+        }catch (Exception exception){
+            logger.error("App - postComment ContentService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
