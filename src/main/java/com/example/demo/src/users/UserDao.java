@@ -1,8 +1,12 @@
 package com.example.demo.src.users;
 
+import com.amazonaws.services.ec2.model.CreateSpotDatafeedSubscriptionRequest;
 import com.example.demo.config.security.User;
 import com.example.demo.src.users.dto.GetScrapResponse;
+import com.example.demo.src.users.dto.MyPageResponse;
 import com.example.demo.src.users.dto.PostJoinRequest;
+import com.example.demo.src.users.dto.object.MyPageContent;
+import com.example.demo.src.users.dto.object.MyPageScrap;
 import com.example.demo.src.users.dto.object.ScrapTypeNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,8 +14,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import javax.sql.RowSetWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -98,6 +104,46 @@ public class UserDao {
             }
         },number);
     }
+
+
+    // 마이페이지 조회를 위한 MyPageResponse 메서드
+    public MyPageResponse getMyPage(int userNum){
+        String query="select u.userNum,u.userNickName,u.userImg, count(s.scrapNum) as scrapCnt from user u inner join scrap s on u.userNum=s.userNum where u.status='active' and u.userNum=?";
+        return this.jdbcTemplate.queryForObject(query, new RowMapper<MyPageResponse>() {
+            @Override
+            public MyPageResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                MyPageResponse res= new MyPageResponse();
+                res.setUserNum(rs.getInt("userNum"));
+                res.setUserNickName(rs.getString("userNickName"));
+                res.setUserImg(rs.getString("userImg"));
+                res.setScrapCnt(rs.getInt("scrapCnt"));
+                return res;
+            }
+        },userNum);
+    }
+
+    // 마이페이지 게시글 조회를 위한 메서드
+    public List<MyPageContent> getMyContents(int userNum){
+        List<MyPageContent> response=new ArrayList<>();
+        for(int i=1; i<=9; i++){
+            String query="select contentNum,contentImg from content where userNum=? and contentCate="+i+" limit 1";
+            MyPageContent content= this.jdbcTemplate.queryForObject(query, new RowMapper<MyPageContent>() {
+                @Override
+                public MyPageContent mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    MyPageContent res=new MyPageContent();
+                    res.setContentNum(rs.getInt("contentNum"));
+                    res.setThumbnail(rs.getString("contentImg"));
+                    return res;
+                }
+            },userNum);
+            response.add(content);
+        }
+        return response;
+    }
+    private String type;
+    private int number;
+    private String thumbnail;
+
 
 
 

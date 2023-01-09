@@ -3,6 +3,7 @@ package com.example.demo.src.users;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.users.dto.GetScrapResponse;
+import com.example.demo.src.users.dto.MyPageResponse;
 import com.example.demo.src.users.dto.PostJoinRequest;
 import com.example.demo.src.users.dto.PostLoginRequest;
 import com.example.demo.utils.JwtProvider;
@@ -37,8 +38,17 @@ public class UserController {
     // 스크랩북 조회 API(20)
     @GetMapping("/scrap/{userNum}")
     public BaseResponse<List<GetScrapResponse>> getScraps(@PathVariable int userNum) throws BaseException{
-        List<GetScrapResponse> result= userService.getScraps(userNum);
+        logger.info("UserController 내 20번 API 실행");
+        List<GetScrapResponse> result= userProvider.getScraps(userNum);
         return new BaseResponse<>(result);
+    }
+
+    // 마이페이지 조회 API(21)
+    @GetMapping("/{userNum}")
+    public BaseResponse<MyPageResponse> getMyPage(@PathVariable int userNum) throws BaseException{
+        logger.info("UserController 내 21번 API 실행");
+        MyPageResponse myPage= userProvider.getMyPage(userNum);
+        return new BaseResponse<>(myPage);
     }
 
 

@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.AssertTrue;
+
 import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
@@ -33,6 +33,7 @@ public class ProductProvider {
         this.s3Uploader=s3Uploader;
     }
 
+    // 상품 조회 메서드
     @Transactional
     public List<GetProductResponse> getProductList() throws BaseException, IOException {
         try{
@@ -45,8 +46,9 @@ public class ProductProvider {
 
     }
 
+    // 상품 상세정보 조회 메서드
     @Transactional
-    public GetProductDetailResponse getProductDetailResponse1(int productNum) throws BaseException,IOException{
+    public GetProductDetailResponse getProductDetailResponse(int productNum) throws BaseException,IOException{
         try{
             GetProductDetailResponse response= new GetProductDetailResponse();
             response.setProduct(productDao.getProductDetail(productNum));
@@ -54,11 +56,12 @@ public class ProductProvider {
             response.setThumbnails(productDao.getThumbnails(productNum));
             return response;
         }catch (Exception exception){
-            logger.error("App - getProductDetailResponse1 ProductProvider Error", exception);
+            logger.error("App - getProductDetailResponse ProductProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
+    // 상품 리뷰 조회 메서드
     @Transactional
     public List<GetReviewResponse> getReviews(int productNum) throws BaseException,IOException{
         try{
@@ -69,6 +72,7 @@ public class ProductProvider {
         }
     }
 
+    // 특정 리뷰 조회 메서드
     @Transactional
     public GetReviewResponse getReview(int reviewNum) throws BaseException,IOException{
         try{
@@ -79,6 +83,7 @@ public class ProductProvider {
         }
     }
 
+    // 홈 화면 상품 조회 메서드
     @Transactional
     public List<GetHomeProduct> getHomeProducts()throws BaseException{
         try{

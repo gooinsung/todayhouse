@@ -31,6 +31,7 @@ public class ProductService {
         this.s3Uploader=s3Uploader;
     }
 
+    // 리뷰 작성 메서드
     @Transactional
     public boolean postReview(PostReviewRequest req,MultipartFile file, int productNum)throws BaseException, IOException {
         try{
@@ -51,6 +52,7 @@ public class ProductService {
 
     }
 
+    // 리뷰 수정 메서드
     @Transactional
     public boolean patchReview(PatchReviewRequest req,MultipartFile file, int reviewNum) throws BaseException,IOException{
         try{
@@ -70,6 +72,8 @@ public class ProductService {
         }
     }
 
+    // 상품 삭제 메서드
+    @Transactional
     public boolean deleteReview(int reviewNum) throws BaseException{
         try{
             boolean result=false;

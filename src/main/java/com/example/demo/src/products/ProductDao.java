@@ -5,11 +5,11 @@ import com.example.demo.src.products.dto.*;
 import com.example.demo.src.products.dto.object.Product;
 import com.example.demo.src.products.dto.object.SaveReviewDTO;
 import com.example.demo.src.products.dto.object.UpdateReviewDTO;
-import com.example.demo.utils.S3Uploader;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.core.parameters.P;
+
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;

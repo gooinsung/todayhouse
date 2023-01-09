@@ -40,11 +40,14 @@ public class ContentController {
     // 전체 게시글 조회 API(11), 게시글 검색 조회 API(16)
     @GetMapping("")
     public BaseResponse<List<GetContentResponse>> getContents(@RequestParam(required = false) String search) throws BaseException{
+
         List<GetContentResponse> responses=new ArrayList<>();
         if(search==null){
+            logger.info("ContentController 내 11번 API 실행");
            responses= contentProvider.getContents();
         }
         if(search!=null){
+            logger.info("ContentController 내 16번 API 실행");
             responses= contentProvider.getContentsBySearch(search);
         }
 
@@ -54,6 +57,7 @@ public class ContentController {
     // 특정 게시글 조회 API(12)
     @GetMapping("/{contentNum}")
     public BaseResponse<GetContentDetailsResponse> getContent(@PathVariable int contentNum) throws BaseException{
+        logger.info("ContentController 내 12번 API 실행");
         GetContentDetailsResponse response= contentProvider.getContent(contentNum);
         return new BaseResponse<>(response);
     }
@@ -61,6 +65,7 @@ public class ContentController {
     // 게시글 작성 API(13)
     @PostMapping("/write")
     public BaseResponse<String> writeContent(@RequestPart @Validated PostContentRequest postContentRequest, @RequestPart MultipartFile contentImg)throws BaseException, IOException{
+        logger.info("ContentController 내 13번 API 실행");
         String result="게시글 작성 실패";
         if(contentService.postContent(postContentRequest,contentImg)){
             result="게시글 작성 성공";
@@ -71,6 +76,7 @@ public class ContentController {
     // 게시글 수정 API(14)
     @PatchMapping("/{contentNum}")
     public BaseResponse<String> modifyContent(@PathVariable int contentNum, @RequestPart @Validated PatchContentRequest patchContentRequest, @RequestPart MultipartFile contentImg) throws BaseException,IOException{
+        logger.info("ContentController 내 14번 API 실행");
         String result=" 게시글 수정 실패";
         if(contentService.modifyContent(contentNum,patchContentRequest, contentImg)){
             result="게시글 수정 성공";
@@ -81,6 +87,7 @@ public class ContentController {
     // 게시글 삭제 API(15)
     @DeleteMapping("/{contentNum}")
     public BaseResponse<String> deleteContent(@PathVariable int contentNum) throws BaseException{
+        logger.info("ContentController 내 15번 API 실행");
         String result="게시글 삭제 실패";
         if(contentService.deleteContent(contentNum)){
             result="게시글 삭제 성공";

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,13 +32,15 @@ public class CartController {
     // 장바구니 조회 API(7)
     @GetMapping("")
     public BaseResponse<GetCartsResponse> getCarts(@RequestParam int userNum)throws BaseException{
+        logger.info("CartController 내 7번 API 실행");
         GetCartsResponse response=cartProvider.getCartList(userNum);
         return new BaseResponse<>(response);
     }
 
     // 장바구니에 상품 추가 API(8)
     @PostMapping("")
-    public BaseResponse<String> addCart(@RequestParam int userNum, @RequestBody PostOrdersCartRequest postOrdersCart) throws BaseException{
+    public BaseResponse<String> addCart(@RequestParam int userNum, @RequestBody @Validated PostOrdersCartRequest postOrdersCart) throws BaseException{
+        logger.info("CartController 내 8번 API 실행");
         String result="장바구니 담기 실패";
         if(cartService.addCart(userNum,postOrdersCart)){
             result="장바구니 담기 성공";
@@ -47,7 +50,8 @@ public class CartController {
 
     // 주문 상품 수량 수정 API(9)
     @PatchMapping("")
-    public BaseResponse<String> changeOrderCnt(@RequestParam int userNum,@RequestBody PatchOrderCntRequest patchOrderCntRequest) throws BaseException{
+    public BaseResponse<String> changeOrderCnt(@RequestParam int userNum,@RequestBody @Validated PatchOrderCntRequest patchOrderCntRequest) throws BaseException{
+        logger.info("CartController 내 9번 API 실행");
         String result="상품 개수 수정 실패";
         if(cartService.updateOrderCnt(patchOrderCntRequest)){
             result="상품 수정 성공!";
@@ -55,9 +59,10 @@ public class CartController {
         return new BaseResponse<>(result);
     }
 
-    // 상품 주문 API
+    // 상품 주문 (10)API
     @PostMapping("/orders/{userNum}")
     public BaseResponse<String> postOrders(@PathVariable int userNum) throws BaseException{
+        logger.info("CartController 내 10번 API 실행");
         String result="상품 주문 실패";
         if(cartService.order(userNum)){
             result="상품 주문 성공!";
@@ -68,6 +73,7 @@ public class CartController {
     // 주문 삭제 API(22)
     @DeleteMapping("")
     public BaseResponse<String> deleteOrder(@RequestParam int ordersNum) throws BaseException{
+        logger.info("CartController 내 22번 API 실행");
         String result="주문 삭제 실패";
         if(cartService.deleteOrders(ordersNum)){
             result="주문 삭제 성공";

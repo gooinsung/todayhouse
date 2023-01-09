@@ -28,8 +28,8 @@ public class ContentService {
         this.s3Uploader = s3Uploader;
     }
 
-    @Transactional
     // 게시글 작성 메서드
+    @Transactional
     public boolean postContent(PostContentRequest request, MultipartFile file)throws BaseException, IOException{
         try{
             boolean result= false;
@@ -45,8 +45,8 @@ public class ContentService {
         }
     }
 
-    @Transactional
     // 게시글 수정 메서드
+    @Transactional
     public boolean modifyContent(int contentNum, PatchContentRequest request,MultipartFile file) throws BaseException,IOException{
         try{
             boolean result=false;
@@ -65,8 +65,8 @@ public class ContentService {
         }
     }
 
-    @Transactional
     // 게시글 삭제 메서드
+    @Transactional
     public boolean deleteContent(int contentNum) throws BaseException{
         try{
             boolean result=false;

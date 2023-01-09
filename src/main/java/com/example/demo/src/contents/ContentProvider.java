@@ -30,8 +30,9 @@ public class ContentProvider {
         this.contentDao=contentDao;
         this.s3Uploader=s3Uploader;
     }
-    @Transactional
+
     // 전체 게시글 조회 메서드
+    @Transactional
     public List<GetContentResponse> getContents() throws BaseException{
         try{
             return contentDao.getContents();
@@ -41,8 +42,9 @@ public class ContentProvider {
         }
     }
 
-    @Transactional
+
     // 게시글 검색 조회 메서드
+    @Transactional
     public List<GetContentResponse> getContentsBySearch(String search) throws BaseException{
         try{
             String searchKeyword="%"+search+"%";
@@ -52,8 +54,9 @@ public class ContentProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    @Transactional
+
     // 특정 게시글 조회 메서드
+    @Transactional
     public GetContentDetailsResponse getContent(int contentNum) throws BaseException{
         try{
             return contentDao.getContent(contentNum);
@@ -63,8 +66,8 @@ public class ContentProvider {
         }
     }
 
-    @Transactional
     // 홈 화면 구성 메서드
+    @Transactional
     public List<GetHomeContent> getHomeContents() throws BaseException{
         try{
             return contentDao.getHomeContents();
@@ -74,8 +77,9 @@ public class ContentProvider {
         }
     }
 
-    @Transactional
+
     // 홈 화면 인기 게시글
+    @Transactional
     public List<GetHomeFamousContent> getHomeFamousContents() throws BaseException{
         try{
             return contentDao.getHomeFamousContents();

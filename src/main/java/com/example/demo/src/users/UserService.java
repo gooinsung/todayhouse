@@ -76,6 +76,7 @@ public class UserService {
     }
 
     // 스크랩 추가
+    @Transactional
     public boolean addScrap(int userNum, String type, int number) throws BaseException{
         try{
             boolean result= false;
@@ -89,32 +90,6 @@ public class UserService {
         }
     }
 
-    // 스크랩 조회
-    public List<GetScrapResponse> getScraps(int userNum) throws BaseException{
-        try{
-            List<GetScrapResponse> response= new ArrayList<>();
-            List<ScrapTypeNumber> tns=userDao.getTypeAndNumber(userNum);
-            for(ScrapTypeNumber tn:tns){
-                GetScrapResponse res=new GetScrapResponse();
-                if(tn.getType().equals("c")){
-                    res.setType(tn.getType());
-                    res.setNumber(tn.getNumber());
-                    res.setThumbnail(userDao.getContentThumbnail(tn.getNumber()));
-                }else{
-                    res.setType(tn.getType());
-                    res.setNumber(tn.getNumber());
-                    res.setThumbnail(userDao.getProductThumbnail(tn.getNumber()));
-                }
 
-                 response.add(res);
-
-            }
-
-            return response;
-        }catch (Exception exception){
-            logger.error("App - getScraps UserService Error", exception);
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
 
 }
