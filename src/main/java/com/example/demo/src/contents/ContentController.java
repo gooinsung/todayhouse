@@ -2,10 +2,7 @@ package com.example.demo.src.contents;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.contents.dto.GetContentDetailsResponse;
-import com.example.demo.src.contents.dto.GetContentResponse;
-import com.example.demo.src.contents.dto.PatchContentRequest;
-import com.example.demo.src.contents.dto.PostContentRequest;
+import com.example.demo.src.contents.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +90,13 @@ public class ContentController {
             result="게시글 삭제 성공";
         }
         return new BaseResponse<>(result);
+    }
+
+    // 게시글 댓글 조회 API(25)
+    @GetMapping("/{contentNum}/comments")
+    public BaseResponse<List<GetContentComment>> getComments(@PathVariable int contentNum) throws BaseException{
+        List<GetContentComment> comments=contentProvider.getComments(contentNum);
+        return new BaseResponse<>(comments);
     }
 
 

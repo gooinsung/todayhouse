@@ -3,10 +3,7 @@ package com.example.demo.src.contents;
 import com.amazonaws.util.EncodingSchemeEnum;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.IndexResponse;
-import com.example.demo.src.contents.dto.GetContentDetailsResponse;
-import com.example.demo.src.contents.dto.GetContentResponse;
-import com.example.demo.src.contents.dto.GetHomeContent;
-import com.example.demo.src.contents.dto.GetHomeFamousContent;
+import com.example.demo.src.contents.dto.*;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +82,17 @@ public class ContentProvider {
             return contentDao.getHomeFamousContents();
         }catch (Exception exception){
             logger.error("App - getHomeFamousContents ContentProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 게시글 댓글 조회 메서드
+    @Transactional
+    public List<GetContentComment> getComments(int contentNum) throws BaseException{
+        try{
+            return contentDao.getComments(contentNum);
+        }catch (Exception exception){
+            logger.error("App - getComments ContentProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

@@ -140,9 +140,6 @@ public class UserDao {
         }
         return response;
     }
-    private String type;
-    private int number;
-    private String thumbnail;
 
 
 

@@ -186,4 +186,41 @@ public class ContentDao {
             }
         });
     }
+
+    // 게시글 댓글 리스트
+    public List<GetContentComment> getComments(int contentNum){
+        String query="select cm.commentNum, cm.comment, cm.updatedAt, u.userNum, u.userNickName, u.userImg from contentComment cm inner join user u on cm.userNum=u.userNum where cm.contentNum=? and parentCommentNum is null";
+        return this.jdbcTemplate.query(query, new RowMapper<GetContentComment>() {
+            @Override
+            public GetContentComment mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetContentComment res= new GetContentComment();
+                res.setCommentNum(rs.getInt("commentNum"));
+                res.setComments(rs.getString("comment"));
+                res.setUpdatedAt(rs.getTimestamp("updatedAt"));
+                res.setUserNum(rs.getInt("userNum"));
+                res.setUserNickName(rs.getString("userNickName"));
+                res.setUserImg(rs.getString("userImg"));
+                List<GetContentComment> childComments=getChildComments(rs.getInt("commentNum"));
+                res.setChildComments(childComments);
+                return res;
+            }
+        },contentNum);
+    }
+
+    public List<GetContentComment> getChildComments(int parentCommentNum){
+        String query="select cm.commentNum, cm.comment, cm.updatedAt, u.userNum, u.userNickName, u.userImg from contentComment cm inner join user u on cm.userNum=u.userNum where cm.parentCommentNum=?";
+        return this.jdbcTemplate.query(query, new RowMapper<GetContentComment>() {
+            @Override
+            public GetContentComment mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetContentComment res= new GetContentComment();
+                res.setCommentNum(rs.getInt("commentNum"));
+                res.setComments(rs.getString("comment"));
+                res.setUpdatedAt(rs.getTimestamp("updatedAt"));
+                res.setUserNum(rs.getInt("userNum"));
+                res.setUserNickName(rs.getString("userNickName"));
+                res.setUserImg(rs.getString("userImg"));
+                return res;
+            }
+        },parentCommentNum);
+    }
 }
