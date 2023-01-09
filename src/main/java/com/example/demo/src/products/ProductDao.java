@@ -125,6 +125,13 @@ public class ProductDao {
         return this.jdbcTemplate.update(query,insertReviewParam);
     }
 
+    // 리뷰작성시, 내가 구매했던 물품인지 확인하는 메서드
+    public int checkOrdered(int userNum,int productNum){
+        String query="select exists(select productNum from orders where status='ordered' and userNum=? and productNum=?)";
+        Object[] selectParam= new Object[]{userNum,productNum};
+        return this.jdbcTemplate.queryForObject(query,int.class ,selectParam);
+    }
+
     // 리뷰 수정
     public int updateReview(UpdateReviewDTO dto){
         String query="update review set reviewContent=?,storedFilename=?, point1=?, point2=?, point3=?, point4=?, pointAvg=? where reviewNum=?";

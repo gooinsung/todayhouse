@@ -36,13 +36,15 @@ public class ProductService {
     public boolean postReview(PostReviewRequest req,MultipartFile file, int productNum)throws BaseException, IOException {
         try{
             boolean result= false;
-            String savedUrl="";
-            if(!file.isEmpty()){
-                savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
-            }
-            SaveReviewDTO dto= new SaveReviewDTO(req, savedUrl,productNum);
-            if(productDao.insertReview(dto)==1){
-                result=true;
+            if(productDao.checkOrdered(req.getUserNum(),productNum)!=0){
+                String savedUrl="";
+                if(!file.isEmpty()){
+                    savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
+                }
+                SaveReviewDTO dto= new SaveReviewDTO(req, savedUrl,productNum);
+                if(productDao.insertReview(dto)==1){
+                    result=true;
+                }
             }
             return result;
         }catch(Exception exception){
