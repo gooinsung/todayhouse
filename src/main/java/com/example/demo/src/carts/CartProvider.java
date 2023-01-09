@@ -39,7 +39,18 @@ public class CartProvider {
             response.setUserNum(userNum);
             return response;
         }catch (Exception exception){
-            logger.error("App - getCartList Provider Error", exception);
+            logger.error("App - getCartList CartProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 주문했던 상품 조회
+    @Transactional
+    public List<Cart> getOrderedList(int userNum) throws BaseException{
+        try{
+           return cartDao.getOrderedCarts(userNum);
+        }catch (Exception exception){
+            logger.error("App - getOrderedList CartProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

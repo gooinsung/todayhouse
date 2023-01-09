@@ -55,6 +55,26 @@ public class CartDao {
         },userNum);
     }
 
+    // 주문 상품 조회
+    public List<Cart> getOrderedCarts(int userNum){
+        String query="select p.productNum, p.productCom, (select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail, p.productName, o.price, o.ordersNum, o.orderCnt, o.status from orders o inner join product p on o.productNum=p.productNum where o.status='ordered' and o.userNum=? ";
+        return this.jdbcTemplate.query(query, new RowMapper<Cart>() {
+            @Override
+            public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Cart cart= new Cart();
+                cart.setProductNum(rs.getInt("productNum"));
+                cart.setThumbnail(rs.getString("thumbnail"));
+                cart.setProductName(rs.getString("productName"));
+                cart.setPrice(rs.getInt("price"));
+                cart.setOrdersNum(rs.getInt("ordersNum"));
+                cart.setOrderCnt(rs.getInt("orderCnt"));
+                cart.setProductCom(rs.getString("productCom"));
+                cart.setStatus(rs.getString("status"));
+                return cart;
+            }
+        },userNum);
+    }
+
 
     // 상품 주문 수량 수정
     public int updateOrderCnt(PatchOrderCntRequest req){
@@ -89,6 +109,7 @@ public class CartDao {
         String query="update orders set status='ordered' where userNum=?";
         return this.jdbcTemplate.update(query,userNum);
     }
+
 
 
 

@@ -13,4 +13,5 @@ public class Cart {
     private int productNum;
     private int ordersNum;
     private String productCom;
+    private String status;
 }

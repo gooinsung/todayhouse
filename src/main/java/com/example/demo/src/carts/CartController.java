@@ -5,6 +5,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.carts.dto.GetCartsResponse;
 import com.example.demo.src.carts.dto.PatchOrderCntRequest;
 import com.example.demo.src.carts.dto.PostOrdersCartRequest;
+import com.example.demo.src.carts.dto.object.Cart;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -81,6 +83,13 @@ public class CartController {
         return new BaseResponse<>(result);
     }
 
+    // 주문했던 상품 조회 API(37)
+    @GetMapping("/ordered/{userNum}")
+    public BaseResponse<List<Cart>> getOrderedList(@PathVariable int userNum) throws BaseException{
+        List<Cart> orderedCartList= new ArrayList<>();
+        orderedCartList=cartProvider.getOrderedList(userNum);
+        return new BaseResponse<>(orderedCartList);
+    }
 
 
 
