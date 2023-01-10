@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/home")
 public class IndexController {
 
     final Logger logger= LoggerFactory.getLogger(this.getClass());
