@@ -23,6 +23,7 @@ public class ContentService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private ContentDao contentDao;
     private S3Uploader s3Uploader;
+
     @Autowired
     public ContentService(ContentDao contentDao, S3Uploader s3Uploader) {
         this.contentDao = contentDao;
@@ -31,16 +32,16 @@ public class ContentService {
 
     // 게시글 작성 메서드
     @Transactional
-    public boolean postContent(PostContentRequest request, MultipartFile file)throws BaseException, IOException{
-        try{
-            boolean result= false;
-            String savedFile=s3Uploader.uploadFiles(file,"todayhouse");
+    public boolean postContent(PostContentRequest request, MultipartFile file) throws BaseException, IOException {
+        try {
+            boolean result = false;
+            String savedFile = s3Uploader.uploadFiles(file, "todayhouse");
             request.setContentImg(savedFile);
-            if(contentDao.postContent(request)==1){
-                result=true;
+            if (contentDao.postContent(request) == 1) {
+                result = true;
             }
             return result;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             logger.error("App - postContent ContentService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
@@ -48,19 +49,19 @@ public class ContentService {
 
     // 게시글 수정 메서드
     @Transactional
-    public boolean modifyContent(int contentNum, PatchContentRequest request,MultipartFile file) throws BaseException,IOException{
-        try{
-            boolean result=false;
-            String savedImg= contentDao.getContentImg(contentNum);
-            System.out.println("원래 이미지: "+savedImg);
+    public boolean modifyContent(int contentNum, PatchContentRequest request, MultipartFile file) throws BaseException, IOException {
+        try {
+            boolean result = false;
+            String savedImg = contentDao.getContentImg(contentNum);
+            System.out.println("원래 이미지: " + savedImg);
 
             s3Uploader.delete(savedImg);
-            String updatedImg= s3Uploader.uploadFiles(file,"todayhouse");
-            System.out.println("업데이트된 이미지: "+updatedImg);
+            String updatedImg = s3Uploader.uploadFiles(file, "todayhouse");
+            System.out.println("업데이트된 이미지: " + updatedImg);
             request.setContentImg(updatedImg);
-            if (contentDao.updateContent(contentNum, request)==1) result=true;
+            if (contentDao.updateContent(contentNum, request) == 1) result = true;
             return result;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             logger.error("App - modifyContent ContentService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
@@ -68,14 +69,14 @@ public class ContentService {
 
     // 게시글 삭제 메서드
     @Transactional
-    public boolean deleteContent(int contentNum) throws BaseException{
-        try{
-            boolean result=false;
-            if(contentDao.changeContentStatus(contentNum)==1){
-                result=true;
+    public boolean deleteContent(int contentNum) throws BaseException {
+        try {
+            boolean result = false;
+            if (contentDao.changeContentStatus(contentNum) == 1) {
+                result = true;
             }
             return result;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             logger.error("App - deleteContent ContentService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
@@ -83,15 +84,60 @@ public class ContentService {
 
     // 게시글 댓글 작성 메서드
     @Transactional
-    public boolean postComment(PostCommentRequest request) throws BaseException{
+    public boolean postComment(PostCommentRequest request) throws BaseException {
+        try {
+            boolean result = false;
+            if (contentDao.insertComment(request) == 1) {
+                result = true;
+            }
+            return result;
+        } catch (Exception exception) {
+            logger.error("App - postComment ContentService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 게시글 댓글 수정 메서드
+    @Transactional
+    public boolean patchComment(int commentNum, String comment) throws BaseException {
+        try {
+            boolean result = false;
+            if (contentDao.updateComment(commentNum, comment) == 1) {
+                result = true;
+            }
+            return result;
+        } catch (Exception exception) {
+            logger.error("App - patchComment ContentService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 게시글 댓글 삭제 메서드
+    @Transactional
+    public boolean deleteComment(int commentNum) throws BaseException {
+        try {
+            boolean result = false;
+            if (contentDao.updateCommentStatus(commentNum) == 1) {
+                result = true;
+            }
+            return result;
+        } catch (Exception exception) {
+            logger.error("App - deleteComment ContentService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 게시글 좋아요 메서드
+    @Transactional
+    public boolean contentLike(int contentNum, int userNum) throws BaseException{
         try{
             boolean result= false;
-            if(contentDao.insertComment(request)==1){
+            if(contentDao.like(contentNum,userNum)==1){
                 result= true;
             }
             return result;
         }catch (Exception exception){
-            logger.error("App - postComment ContentService Error", exception);
+            logger.error("App - contentLike ContentService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

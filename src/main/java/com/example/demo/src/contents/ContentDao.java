@@ -231,4 +231,39 @@ public class ContentDao {
         Object[] insertParam=new Object[]{req.getComment(),req.getUserNum(),req.getContentNum()};
         return this.jdbcTemplate.update(query,insertParam);
     }
+
+    // 게시글 댓글 수정
+    public int updateComment(int commentNum, String comment){
+        String query="update contentComment set comment=? where commentNum=?";
+        Object[] updateParam= new Object[]{comment,commentNum};
+        return this.jdbcTemplate.update(query,updateParam);
+    }
+
+    // 게시글 상태 병경
+    public int updateCommentStatus(int commentNum){
+        String query="update contentComment set status='inactive' where commentNum=?";
+        return this.jdbcTemplate.update(query,commentNum);
+    }
+
+    // 게시글 좋아요
+    public int like(int contentNum,int userNum){
+        String query="insert into contentLike (contentNum,userNum) values(?,?)";
+        Object[] insertParam= new Object[]{contentNum,userNum};
+        return this.jdbcTemplate.update(query,insertParam);
+    }
+
+    // 게시글 좋아요 조회
+    public List<GetLikeUserResponse> getLikeUserResponse(int contentNum){
+        String query="select u.userNum, u.userNickName, u.userImg from contentLike l inner join user u on l.userNum=u.userNum where l.contentNum=?";
+        return this.jdbcTemplate.query(query, new RowMapper<GetLikeUserResponse>() {
+            @Override
+            public GetLikeUserResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetLikeUserResponse res= new GetLikeUserResponse();
+                res.setUserNum(rs.getInt("userNum"));
+                res.setUserNickName(rs.getString("userNickName"));
+                res.setUserImg(rs.getString("userImg"));
+                return res;
+            }
+        },contentNum);
+    }
 }

@@ -6,6 +6,7 @@ import com.example.demo.src.contents.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -100,13 +101,51 @@ public class ContentController {
     }
 
     // 게시글 댓글 작성 API(26)
-    @PostMapping("/{contentNum}/comments/write")
+    @PostMapping("/{contentNum}/comments")
     public BaseResponse<String> postComment(@PathVariable int contentNum,@RequestBody @Validated PostCommentRequest postCommentRequest) throws BaseException{
-        String result="게시글 작성 실패";
+        String result="댓글 작성 실패";
         if(contentService.postComment(postCommentRequest)){
-            result="게시글 작성 성공";
+            result="댓글 작성 성공";
         }
         return new BaseResponse<>(result);
+    }
+
+    // 게시글 댓글 수정 API(27)
+    @PatchMapping("/{contentNum}/comments")
+    public BaseResponse<String> patchComment(@RequestParam int commentNum, @RequestBody PatchCommentRequest request) throws BaseException{
+        String result="댓글 수정 실패";
+        if(contentService.patchComment(commentNum,request.getComment())){
+            result="댓글 수정 성공";
+        };
+        return new BaseResponse<>(result);
+    }
+
+    // 게시글 댓글 삭제 API(28)
+    @DeleteMapping("/{contentNum}/comments")
+    public BaseResponse<String> deleteComment(@RequestParam int commentNum) throws BaseException{
+        String result="댓글 삭제 실패";
+        if(contentService.deleteComment(commentNum)){
+            result="댓글 삭제 성공";
+        }
+        return new BaseResponse<>(result);
+    }
+
+
+    // 게시글 좋아요 API(29)
+    @PostMapping("/{contentNum}/likes")
+    public BaseResponse<String> contentLike(@PathVariable int contentNum,@RequestParam int userNum) throws BaseException{
+        String result="게시글 좋아요 실패";
+        if(contentService.contentLike(contentNum,userNum)){
+            result="게시글 좋아요 성공";
+        }
+        return new BaseResponse<>(result);
+    }
+
+    // 게시글 좋아요 조회 API(30)
+    @GetMapping("/{contentNum}/likes")
+    public BaseResponse<List<GetLikeUserResponse>> getLikeUser(@PathVariable int contentNum) throws BaseException{
+        List<GetLikeUserResponse> response= contentProvider.getLikeUserResponses(contentNum);
+        return new BaseResponse<>(response);
     }
 
 

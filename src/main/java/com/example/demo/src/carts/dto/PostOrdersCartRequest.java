@@ -10,11 +10,9 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 public class PostOrdersCartRequest {
 
-    @NotBlank
     @Positive
     private int productNum;
 
-    @NotBlank
     @Positive
     private int orderCnt;
 }

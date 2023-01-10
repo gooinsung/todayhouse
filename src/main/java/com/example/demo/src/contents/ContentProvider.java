@@ -96,4 +96,15 @@ public class ContentProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    // 게시글 좋아요 조회 메서드
+    @Transactional
+    public List<GetLikeUserResponse> getLikeUserResponses(int contentNum) throws BaseException{
+        try{
+            return contentDao.getLikeUserResponse(contentNum);
+        }catch (Exception exception){
+            logger.error("App - getLikeUserResponses ContentProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

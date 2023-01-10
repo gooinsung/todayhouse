@@ -46,7 +46,7 @@ public class IndexController {
 
 
     // 홈 화면 (19)API
-    @GetMapping("")
+    @GetMapping("/home")
     public BaseResponse<IndexResponse> home() throws BaseException{
         logger.info("IndexController 내 19번 API 실행");
         IndexResponse result= new IndexResponse();
@@ -81,7 +81,7 @@ public class IndexController {
     }
 
     // 스크랩 API(24)
-    @PostMapping("")
+    @PostMapping("/scrap")
     public BaseResponse<String> scrap(@RequestParam int userNum, @RequestParam String type, @RequestParam int number) throws BaseException{
         logger.info("IndexController 내 24번 API 실행");
         String result="스크랩북 추가 실패";
