@@ -20,6 +20,7 @@ spring:
       max-request-size: 128MB
 
 
+
 cloud:
   aws:
     s3:
@@ -32,4 +33,3 @@ cloud:
       auto: false
     stack:
       auto: false
-
