@@ -141,6 +141,13 @@ public class UserDao {
         return response;
     }
 
+    // 유저 정보수정
+    public int updateUser(int userNum,String userNickName,String userImg){
+        String query="update user set userNickName=?, userImg=? where userNum=?";
+        Object[] updateParam=new Object[]{userNickName,userImg,userNum};
+        return this.jdbcTemplate.update(query,updateParam);
+    }
+
 
 
 

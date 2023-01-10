@@ -1,6 +1,8 @@
 package com.example.demo.src.users;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.products.ProductDao;
+import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.users.dto.GetScrapResponse;
 import com.example.demo.src.users.dto.MyPageResponse;
 import com.example.demo.src.users.dto.object.ScrapTypeNumber;
@@ -22,13 +24,15 @@ public class UserProvider {
 
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
     private UserDao userDao;
+    private ProductDao productDao;
 
     private S3Uploader s3Uploader;
 
     @Autowired
-    public UserProvider(UserDao userDao, S3Uploader s3Uploader) {
+    public UserProvider(UserDao userDao, S3Uploader s3Uploader, ProductDao productDao) {
         this.userDao = userDao;
         this.s3Uploader = s3Uploader;
+        this.productDao = productDao;
     }
 
     // 스크랩 조회
@@ -68,6 +72,17 @@ public class UserProvider {
             return response;
         }catch (Exception exception){
             logger.error("App - getMyPage UserProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 내가 쓴 리뷰 조회 메서드
+    @Transactional
+    public List<GetReviewResponse> getMyReviews(int userNum) throws BaseException{
+        try{
+            return productDao.getMyReviews(userNum);
+        }catch (Exception exception){
+            logger.error("App - getMyReviews UserProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

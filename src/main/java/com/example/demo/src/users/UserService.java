@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +87,27 @@ public class UserService {
             return result;
         }catch (Exception exception){
             logger.error("App - addScrap UserService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 유저 정보 수정 메서드
+    public boolean updateUser(int userNum, String userNickName, MultipartFile file) throws BaseException{
+        try{
+            boolean result=false;
+            String userImg="";
+            if(userNickName==null){
+                userNickName="userNickName";
+            }
+            if(!file.isEmpty()){
+                userImg=s3Uploader.uploadFiles(file,"todayhouse");
+            }
+            if(userDao.updateUser(userNum,userNickName,userImg)==1){
+                result=true;
+            }
+            return result;
+        }catch (Exception exception){
+            logger.error("App - updateUser UserService Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

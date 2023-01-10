@@ -95,6 +95,29 @@ public class ProductDao {
         },productNum);
     }
 
+    // 내가 쓴 리뷰 조회
+    public List<GetReviewResponse> getMyReviews(int userNum){
+        String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName , p.productName from review r inner join user u on r.userNum=u.userNum inner join product p on r.productNum=p.productNum where r.status='active' and r.userNum=?";
+        return this.jdbcTemplate.query(query, new RowMapper<GetReviewResponse>() {
+            @Override
+            public GetReviewResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetReviewResponse response= new GetReviewResponse();
+                response.setReviewNum(rs.getInt("reviewNum"));
+                response.setPoint1(rs.getInt("point1"));
+                response.setPoint2(rs.getInt("point2"));
+                response.setPoint3(rs.getInt("point3"));
+                response.setPoint4(rs.getInt("point4"));
+                response.setPointAvg(rs.getFloat("pointAvg"));
+                response.setCreatedAt(rs.getTimestamp("createdAt"));
+                response.setReviewImg(rs.getString("storedFilename"));
+                response.setReviewContent(rs.getString("reviewContent"));
+                response.setUserNickName(rs.getString("userNickName"));
+                response.setProductName(rs.getString("productName"));
+                return response;
+            }
+        },userNum);
+    }
+
     // 특정 리뷰 조회
     public GetReviewResponse getReview(int reviewNum){
         String query="select r.reviewNum, r.point1, r.point2, r.point3, r.point4, r.pointAvg, r.createdAt, r.storedFilename, r.reviewContent, u.userNickName, (select p.productName from product p where p.productNum=r.productNum) as productName from review r inner join user u on r.userNum=u.userNum where r.status='active' and r.reviewNum=?";
@@ -215,6 +238,10 @@ public class ProductDao {
             }
         });
     }
+
+
+
+
 
 
 

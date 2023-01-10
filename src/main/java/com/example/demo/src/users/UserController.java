@@ -2,6 +2,7 @@ package com.example.demo.src.users;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.users.dto.GetScrapResponse;
 import com.example.demo.src.users.dto.MyPageResponse;
 import com.example.demo.src.users.dto.PostJoinRequest;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -51,6 +54,21 @@ public class UserController {
         return new BaseResponse<>(myPage);
     }
 
+    // 마이페이지 유저정보 수정 API(31)
+    @PatchMapping("/{userNum}/mypage")
+    public BaseResponse<String> patchMyPage(@PathVariable int userNum,@RequestPart String userNickName, @RequestPart(required = false) MultipartFile userImg) throws BaseException{
+        String result="유저 정보 수정 실패";
+        if(userService.updateUser(userNum,userNickName,userImg)){
+            result="유저 정보 수정 성공";
+        }
+        return new BaseResponse<>(result);
+    }
 
+    // 내가 쓴 리뷰 조회 API(32)
+    @GetMapping("/{userNum}/myreview")
+    public BaseResponse<List<GetReviewResponse>> getMyReviews(@PathVariable int userNum) throws BaseException{
+        List<GetReviewResponse> response=userProvider.getMyReviews(userNum);
+        return new BaseResponse<>(response);
+    }
 
 }
