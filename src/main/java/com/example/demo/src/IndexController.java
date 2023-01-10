@@ -46,7 +46,7 @@ public class IndexController {
 
 
     // 홈 화면 (19)API
-    @GetMapping("")
+    @GetMapping("/home")
     public BaseResponse<IndexResponse> home() throws BaseException{
         logger.info("IndexController 내 19번 API 실행");
         IndexResponse result= new IndexResponse();
