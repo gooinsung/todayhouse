@@ -8,10 +8,10 @@ spring:
 
   datasource:
     platform: mysql
-    url: jdbc:mysql://database-1.ckevuiz8guuf.ap-northeast-2.rds.amazonaws.com/todayhouse?autoReconnect=true # 변경해주세요
-    username: admin
-    password: Rndlstjd112!
-    driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
+    url: jdbc:mysql://database-1.ckevuiz8guuf.ap-northeast-2.rds.amazonaws.com/todayhouse?autoReconnect=true
+    username: ?
+    password: ?
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 
   servlet:
@@ -21,4 +21,15 @@ spring:
 
 
 
-
+cloud:
+  aws:
+    s3:
+      bucket: bali-todayhouse
+    credentials:
+      access-key: ?
+      secret-key: ?
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
