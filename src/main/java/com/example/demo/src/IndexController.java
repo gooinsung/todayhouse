@@ -57,7 +57,7 @@ public class IndexController {
     }
 
     // 회원 가입 API(17)
-    @PostMapping("/sign-up")
+    @PostMapping("/join")
     public BaseResponse<String> join(@Validated @RequestBody PostJoinRequest postJoinRequest) throws BaseException {
         logger.info("IndexController 내 17번 API 실행");
         String result="회원 가입 실패";
@@ -68,7 +68,7 @@ public class IndexController {
     }
 
     // 로그인 API(18)
-    @PostMapping("/sign-in")
+    @PostMapping("/login")
     public BaseResponse<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
         logger.info("IndexController 내 18번 API 실행");
         String result="로그인 실패";
