@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,18 +93,26 @@ public class UserService {
     }
 
     // 유저 정보 수정 메서드
-    public boolean updateUser(int userNum, String userNickName, MultipartFile file) throws BaseException{
+    public boolean updateUser(int userNum, String userNickName, MultipartFile file) throws BaseException, IOException {
         try{
             boolean result=false;
-            String userImg="";
-            if(userNickName==null){
-                userNickName="userNickName";
-            }
-            if(!file.isEmpty()){
-                userImg=s3Uploader.uploadFiles(file,"todayhouse");
-            }
-            if(userDao.updateUser(userNum,userNickName,userImg)==1){
-                result=true;
+            String savedUserImg=null;
+            String saveUserImg=null;
+            if(userNickName!=null && file!=null){
+                logger.info("닉네임,사진 변경");
+                savedUserImg= userDao.getUserSavedImg(userNum);
+                s3Uploader.delete(savedUserImg);
+                saveUserImg= s3Uploader.uploadFiles(file,"todayhouse");
+                if(userDao.updateUser(userNum,userNickName,saveUserImg)==1) result=true;
+            }else if(userNickName!=null && file==null){
+                logger.info("닉네임만 변경");
+                if(userDao.updateUserNickName(userNum, userNickName)==1) result= true;
+            }else if(userNickName==null && file!=null){
+                logger.info("사진만 변경");
+                savedUserImg=userDao.getUserSavedImg(userNum);
+                s3Uploader.delete(savedUserImg);
+                saveUserImg= s3Uploader.uploadFiles(file,"todayhouse");
+                if(userDao.updateUserImg(userNum,saveUserImg)==1) result=true;
             }
             return result;
         }catch (Exception exception){

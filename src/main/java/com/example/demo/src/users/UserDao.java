@@ -11,6 +11,7 @@ import com.example.demo.src.users.dto.object.ScrapTypeNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.objenesis.ObjenesisHelper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -146,6 +147,31 @@ public class UserDao {
         String query="update user set userNickName=?, userImg=? where userNum=?";
         Object[] updateParam=new Object[]{userNickName,userImg,userNum};
         return this.jdbcTemplate.update(query,updateParam);
+    }
+
+    // 유저 닉네임 변경
+    public int updateUserNickName(int userNum,String userNickName){
+        String query="update user set userNickName=? where userNum=?";
+        Object[] updateParam=new Object[]{userNickName,userNum};
+        return this.jdbcTemplate.update(query,updateParam);
+    }
+
+    // 유저 이미지 변경
+    public int updateUserImg(int userNum,String userImg){
+        String query="update user set userImg=? where userNum=?";
+        Object[] updateParam=new Object[]{userImg,userNum};
+        return this.jdbcTemplate.update(query,updateParam);
+    }
+
+    // 원래 유저 이미지 가져오기
+    public String getUserSavedImg(int userNum){
+        String query="select userImg from user where userNum=?";
+        return this.jdbcTemplate.queryForObject(query, new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("userImg");
+            }
+        },userNum);
     }
 
 

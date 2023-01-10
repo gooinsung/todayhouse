@@ -86,6 +86,7 @@ public class CartController {
     // 주문했던 상품 조회 API(37)
     @GetMapping("/ordered/{userNum}")
     public BaseResponse<List<Cart>> getOrderedList(@PathVariable int userNum) throws BaseException{
+        logger.info("CartController 내 37번 API 실행");
         List<Cart> orderedCartList= new ArrayList<>();
         orderedCartList=cartProvider.getOrderedList(userNum);
         return new BaseResponse<>(orderedCartList);

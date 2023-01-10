@@ -19,7 +19,6 @@ import java.util.Date;
 public class JwtProvider {
     private String secretKey= Secret.JWT_SECRET_KEY;
 
-
     private PrincipalDetailsService principalDetailService;
 
     @Autowired

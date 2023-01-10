@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -57,7 +58,8 @@ public class UserController {
 
     // 마이페이지 유저정보 수정 API(31)
     @PatchMapping("/{userNum}/mypage")
-    public BaseResponse<String> patchMyPage(@PathVariable int userNum,@RequestPart String userNickName, @RequestPart(required = false) MultipartFile userImg) throws BaseException{
+    public BaseResponse<String> patchMyPage(@PathVariable int userNum,@RequestPart(required = false) String userNickName, @RequestPart(required = false) MultipartFile userImg) throws BaseException, IOException {
+        logger.info("UserController 내 31번 API 실행");
         String result="유저 정보 수정 실패";
         if(userService.updateUser(userNum,userNickName,userImg)){
             result="유저 정보 수정 성공";
@@ -68,6 +70,7 @@ public class UserController {
     // 내가 쓴 리뷰 조회 API(32)
     @GetMapping("/{userNum}/myreview")
     public BaseResponse<List<GetReviewResponse>> getMyReviews(@PathVariable int userNum) throws BaseException{
+        logger.info("UserController 내 32번 API 실행");
         List<GetReviewResponse> response=userProvider.getMyReviews(userNum);
         return new BaseResponse<>(response);
     }
@@ -75,6 +78,7 @@ public class UserController {
     // 내가 쓴 댓글 조회 API(33)
     @GetMapping("/{userNum}/mycomment")
     public BaseResponse<List<GetContentComment>> getMyComments(@PathVariable int userNum) throws BaseException{
+        logger.info("UserController 내 33번 API 실행");
         List<GetContentComment> response= userProvider.getMyComments(userNum);
         return new BaseResponse<>(response);
     }
