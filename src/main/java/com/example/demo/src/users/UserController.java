@@ -2,6 +2,7 @@ package com.example.demo.src.users;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.contents.dto.GetContentComment;
 import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.users.dto.GetScrapResponse;
 import com.example.demo.src.users.dto.MyPageResponse;
@@ -68,6 +69,13 @@ public class UserController {
     @GetMapping("/{userNum}/myreview")
     public BaseResponse<List<GetReviewResponse>> getMyReviews(@PathVariable int userNum) throws BaseException{
         List<GetReviewResponse> response=userProvider.getMyReviews(userNum);
+        return new BaseResponse<>(response);
+    }
+
+    // 내가 쓴 댓글 조회 API(33)
+    @GetMapping("/{userNum}/mycomment")
+    public BaseResponse<List<GetContentComment>> getMyComments(@PathVariable int userNum) throws BaseException{
+        List<GetContentComment> response= userProvider.getMyComments(userNum);
         return new BaseResponse<>(response);
     }
 

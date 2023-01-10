@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.executable.ValidateOnExecution;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -40,12 +41,19 @@ public class ProductController {
     }
 
 
-    // 상품리스트 조회 API(2)
+    // 상품리스트 조회 API(2), 상품 검색 API(34)
     @GetMapping("")
-    public BaseResponse<List<GetProductResponse>> getProductList() throws BaseException, IOException {
-        logger.info("ProductController 내 2번 API 실행");
-        List<GetProductResponse> result= productProvider.getProductList();
-        return new BaseResponse<>(result);
+    public BaseResponse<List<GetProductResponse>> getProductList(@RequestParam(required = false) String search) throws BaseException, IOException {
+        List<GetProductResponse> response= new ArrayList<>();
+        if(search==null){
+            logger.info("ProductController 내 2번 API 실행");
+            response= productProvider.getProductList();
+        }else{
+            logger.info("ProductController 내 34번 API 실행");
+            response= productProvider.getProductListBySearch(search);
+        }
+
+        return new BaseResponse<>(response);
     }
 
     // 특정 상품 리뷰 조회 API(3)
@@ -96,6 +104,21 @@ public class ProductController {
         GetReviewResponse res= productProvider.getReview(reviewNum);
         return new BaseResponse<>(res);
     }
+
+    // 상품 카테고리별 조회 API(35), 상품 카테고리별 검색 API(36)
+    @GetMapping("/view")
+    public BaseResponse<List<GetProductResponse>> getProductOrderByCateAndSearch(@RequestParam int cate,@RequestParam(required = false) String search)throws BaseException{
+        List<GetProductResponse> result= new ArrayList<>();
+        if(search==null){
+            logger.info("ProductController 내 35번 API 실행");
+        result=productProvider.getProductResponseOrderByCate(cate);
+        }else{
+            logger.info("ProductController 내 36번 API 실행");
+            result=productProvider.getProductResponseOrderByCateAndSearch(cate,search);
+        }
+        return new BaseResponse<>(result);
+    }
+
 
 
 

@@ -184,6 +184,74 @@ public class ProductDao {
         });
     }
 
+    // 상품 검색 리스트 가져오기
+    public List<GetProductResponse> getProductListBySearch(String search){
+        String query= "select p.productNum, p.productName, p.productPrice, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg,(select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail from product p where p.status='active' and productName like ?";
+        GetProductResponse response= new GetProductResponse();
+        return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
+            @Override
+            public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetProductResponse response= new GetProductResponse();
+                response.setProductNum(rs.getInt("productNum"));
+                response.setProductName(rs.getString("productName"));
+                response.setProductPrice(rs.getInt("productPrice"));
+                response.setProductCate(rs.getInt("productCate"));
+                response.setReviewCnt(rs.getInt("reviewCnt"));
+                response.setProductCom(rs.getString("productCom"));
+                response.setReviewAvg(rs.getFloat("reviewAvg"));
+                response.setThumbnail(rs.getString("thumbnail"));
+
+                return response;
+            }
+        },search);
+    }
+
+
+    // 상품 카테고리별 리스트 가져오기
+    public List<GetProductResponse> getProductListOrderByCate(int cate){
+        String query= "select p.productNum, p.productName, p.productPrice, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg,(select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail from product p where p.status='active' and p.productCate=?";
+        GetProductResponse response= new GetProductResponse();
+        return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
+            @Override
+            public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetProductResponse response= new GetProductResponse();
+                response.setProductNum(rs.getInt("productNum"));
+                response.setProductName(rs.getString("productName"));
+                response.setProductPrice(rs.getInt("productPrice"));
+                response.setProductCate(rs.getInt("productCate"));
+                response.setReviewCnt(rs.getInt("reviewCnt"));
+                response.setProductCom(rs.getString("productCom"));
+                response.setReviewAvg(rs.getFloat("reviewAvg"));
+                response.setThumbnail(rs.getString("thumbnail"));
+
+                return response;
+            }
+        },cate);
+    }
+
+    // 상품 카테고리별 검색 리스트 가져오기
+    public List<GetProductResponse> getProductListOrderByCateAndSearch(int cate,String search){
+        String query= "select p.productNum, p.productName, p.productPrice, p.productCate,p.productCom, (select count(r.reviewNum) from review r where r.productNum=p.productNum) as reviewCnt, (select avg(r.pointAvg) from review r where r.productNum=p.productNum) as reviewAvg,(select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail from product p where p.status='active' and p.productCate=? and p.productName like ?";
+        Object[] selectParam= new Object[]{cate,search};
+        GetProductResponse response= new GetProductResponse();
+        return this.jdbcTemplate.query(query, new RowMapper<GetProductResponse>() {
+            @Override
+            public GetProductResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetProductResponse response= new GetProductResponse();
+                response.setProductNum(rs.getInt("productNum"));
+                response.setProductName(rs.getString("productName"));
+                response.setProductPrice(rs.getInt("productPrice"));
+                response.setProductCate(rs.getInt("productCate"));
+                response.setReviewCnt(rs.getInt("reviewCnt"));
+                response.setProductCom(rs.getString("productCom"));
+                response.setReviewAvg(rs.getFloat("reviewAvg"));
+                response.setThumbnail(rs.getString("thumbnail"));
+
+                return response;
+            }
+        },selectParam);
+    }
+
 
     // 상품 정보 가져오는 메서드
     public Product getProductInfo(int productNum){

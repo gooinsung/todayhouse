@@ -35,7 +35,7 @@ public class ProductProvider {
 
     // 상품 조회 메서드
     @Transactional
-    public List<GetProductResponse> getProductList() throws BaseException, IOException {
+    public List<GetProductResponse> getProductList() throws BaseException {
         try{
             List<GetProductResponse> getProducts = productDao.getProductList();
             return getProducts;
@@ -44,6 +44,42 @@ public class ProductProvider {
             throw new BaseException(DATABASE_ERROR);
         }
 
+    }
+
+    // 상품 검색 메서드
+    @Transactional
+    public List<GetProductResponse> getProductListBySearch(String search) throws BaseException{
+        try{
+            String searchWord="%"+search+"%";
+            List<GetProductResponse> getProductsBySearch=productDao.getProductListBySearch(searchWord);
+            return getProductsBySearch;
+        }catch (Exception exception){
+            logger.error("App - getProductListBySearch ProductProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 상품 카테고리별 조회 메서드
+    @Transactional
+    public List<GetProductResponse> getProductResponseOrderByCate(int cate) throws BaseException{
+        try{
+            return productDao.getProductListOrderByCate(cate);
+        }catch (Exception exception){
+            logger.error("App -     public List<GetProductResponse> getProductResponseOrderByCate(int cate) throws BaseException{\n ProductProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 상품 카테고리별 검색 메서드
+    @Transactional
+    public List<GetProductResponse> getProductResponseOrderByCateAndSearch(int cate,String search) throws BaseException{
+        try{
+            String searchWord="%"+search+"%";
+            return productDao.getProductListOrderByCateAndSearch(cate,searchWord);
+        }catch (Exception exception){
+            logger.error("App -     public List<GetProductResponse> getProductResponseOrderByCate(int cate) throws BaseException{\n ProductProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     // 상품 상세정보 조회 메서드

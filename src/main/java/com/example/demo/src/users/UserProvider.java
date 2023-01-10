@@ -1,6 +1,8 @@
 package com.example.demo.src.users;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.contents.ContentDao;
+import com.example.demo.src.contents.dto.GetContentComment;
 import com.example.demo.src.products.ProductDao;
 import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.users.dto.GetScrapResponse;
@@ -25,14 +27,15 @@ public class UserProvider {
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
     private UserDao userDao;
     private ProductDao productDao;
-
+    private ContentDao contentDao;
     private S3Uploader s3Uploader;
 
     @Autowired
-    public UserProvider(UserDao userDao, S3Uploader s3Uploader, ProductDao productDao) {
+    public UserProvider(UserDao userDao, S3Uploader s3Uploader, ProductDao productDao,ContentDao contentDao) {
         this.userDao = userDao;
         this.s3Uploader = s3Uploader;
         this.productDao = productDao;
+        this.contentDao = contentDao;
     }
 
     // 스크랩 조회
@@ -83,6 +86,17 @@ public class UserProvider {
             return productDao.getMyReviews(userNum);
         }catch (Exception exception){
             logger.error("App - getMyReviews UserProvider Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 내가 쓴 댓글 조회 메서드
+    @Transactional
+    public List<GetContentComment> getMyComments(int userNum) throws BaseException{
+        try{
+            return contentDao.getMyComments(userNum);
+        }catch (Exception exception){
+            logger.error("App - getMyComments UserProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
