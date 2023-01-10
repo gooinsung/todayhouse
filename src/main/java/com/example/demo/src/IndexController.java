@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/home")
 public class IndexController {
 
     final Logger logger= LoggerFactory.getLogger(this.getClass());
@@ -46,7 +47,7 @@ public class IndexController {
 
 
     // 홈 화면 (19)API
-    @GetMapping("/home")
+    @GetMapping("")
     public BaseResponse<IndexResponse> home() throws BaseException{
         logger.info("IndexController 내 19번 API 실행");
         IndexResponse result= new IndexResponse();
