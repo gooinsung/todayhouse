@@ -243,10 +243,15 @@ public class ContentDao {
         },parentCommentNum);
     }
     
-    // 게시글 작성
+    // 게시글 댓글 작성
     public int insertComment(PostCommentRequest req){
-        String query="insert into contentComment (comment,userNum,contentNum) values(?,?,?)";
-        Object[] insertParam=new Object[]{req.getComment(),req.getUserNum(),req.getContentNum()};
+        String query="insert into contentComment (comment,userNum,contentNum,parentCommentNum) values(?,?,?,?)";
+        Object[] insertParam=new Object[]{req.getComment(),req.getUserNum(),req.getContentNum(),req.getParentCommentNum()};
+        if(req.getParentCommentNum()==0){
+            query="insert into contentComment (comment,userNum,contentNum,parentCommentNum) values(?,?,?,null)";
+            insertParam=new Object[]{req.getComment(),req.getUserNum(),req.getContentNum()};
+        }
+
         return this.jdbcTemplate.update(query,insertParam);
     }
 
