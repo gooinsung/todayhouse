@@ -18,4 +18,6 @@ public class PostCommentRequest {
 
     @NotNull
     private String comment;
+
+    private int parentCommentNum;
 }

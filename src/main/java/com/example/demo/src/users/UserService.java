@@ -81,6 +81,9 @@ public class UserService {
     @Transactional
     public boolean addScrap(int userNum, String type, int number) throws BaseException{
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             boolean result= false;
             if(userDao.insertScrap(userNum,type,number)==1){
                 result=true;
@@ -95,6 +98,9 @@ public class UserService {
     // 유저 정보 수정 메서드
     public boolean updateUser(int userNum, String userNickName, MultipartFile file) throws BaseException, IOException {
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             boolean result=false;
             String savedUserImg=null;
             String saveUserImg=null;

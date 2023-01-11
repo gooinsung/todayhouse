@@ -3,6 +3,7 @@ package com.example.demo.src.carts;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.carts.dto.GetCartsResponse;
 import com.example.demo.src.carts.dto.object.Cart;
+import com.example.demo.src.users.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +13,28 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.USERS_EMPTY_USER_ID;
 
 @Service
 public class CartProvider {
 
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
     private CartDao cartDao;
+    private UserDao userDao;
 
     @Autowired
-    public CartProvider(CartDao cartDao) {
+    public CartProvider(CartDao cartDao,UserDao userDao) {
         this.cartDao = cartDao;
+        this.userDao=userDao;
     }
 
     // 장바구니 조회
     @Transactional
     public GetCartsResponse getCartList(int userNum)throws BaseException {
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             GetCartsResponse response=new GetCartsResponse();
             List<Cart> cartList= cartDao.getCarts(userNum);
             int totalPrice=0;
@@ -48,6 +55,9 @@ public class CartProvider {
     @Transactional
     public List<Cart> getOrderedList(int userNum) throws BaseException{
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
            return cartDao.getOrderedCarts(userNum);
         }catch (Exception exception){
             logger.error("App - getOrderedList CartProvider Error", exception);

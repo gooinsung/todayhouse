@@ -6,6 +6,7 @@ import com.example.demo.src.products.dto.GetProductDetailResponse;
 import com.example.demo.src.products.dto.GetProductResponse;
 import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.products.dto.object.GetProduct;
+import com.example.demo.src.users.UserDao;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,13 @@ public class ProductProvider {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private ProductDao productDao;
     private S3Uploader s3Uploader;
+    private UserDao userDao;
 
     @Autowired
-    public ProductProvider(ProductDao productDao,S3Uploader s3Uploader) {
+    public ProductProvider(ProductDao productDao,S3Uploader s3Uploader,UserDao userDao) {
         this.productDao = productDao;
         this.s3Uploader=s3Uploader;
+        this.userDao=userDao;
     }
 
     // 상품 조회 메서드

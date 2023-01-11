@@ -7,6 +7,7 @@ import com.example.demo.src.carts.dto.PostOrdersCartRequest;
 import com.example.demo.src.carts.dto.object.OrderMap;
 import com.example.demo.src.products.ProductDao;
 import com.example.demo.src.products.dto.object.Product;
+import com.example.demo.src.users.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.USERS_EMPTY_USER_ID;
 
 @Service
 public class CartService {
@@ -23,18 +25,23 @@ public class CartService {
 
     private CartDao cartDao;
     private ProductDao productDao;
+    private UserDao userDao;
 
 
     @Autowired
-    public CartService(CartDao cartDao,ProductDao productDao) {
+    public CartService(CartDao cartDao,ProductDao productDao,UserDao userDao) {
         this.cartDao = cartDao;
         this.productDao = productDao;
+        this.userDao=userDao;
     }
 
     // 주문 및 장바구니에 추가 메서드
     @Transactional
     public boolean addCart(int userNum, PostOrdersCartRequest req)throws BaseException{
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             boolean result= false;
             Product product= productDao.getProductInfo(req.getProductNum());
             CreateOrderAndCartSaveDto dto= new CreateOrderAndCartSaveDto();
@@ -45,7 +52,6 @@ public class CartService {
             if(cartDao.insertOrder(dto)==1){
                 result=true;
             }
-
             return result;
         }catch (Exception exception){
             logger.error("App - addOrderAndCart CartService Error", exception);
@@ -87,6 +93,9 @@ public class CartService {
     @Transactional
     public boolean order(int userNum) throws BaseException{
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             boolean result=false;
             List<OrderMap> orderMaps=cartDao.getOrderMap(userNum);
             if(productDao.reduceProductCnt(orderMaps)!=0){

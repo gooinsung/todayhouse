@@ -4,6 +4,7 @@ import com.amazonaws.util.EncodingSchemeEnum;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.IndexResponse;
 import com.example.demo.src.contents.dto.*;
+import com.example.demo.src.users.UserDao;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,14 @@ public class ContentProvider {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private ContentDao contentDao;
     private S3Uploader s3Uploader;
+    private UserDao userDao;
 
     @Autowired
-    public void ContentProvider(ContentDao contentDao,S3Uploader s3Uploader){
+    public void ContentProvider(ContentDao contentDao,S3Uploader s3Uploader,UserDao userDao){
         this.contentDao=contentDao;
         this.s3Uploader=s3Uploader;
+        this.userDao=userDao;
+
     }
 
     // 전체 게시글 조회 메서드

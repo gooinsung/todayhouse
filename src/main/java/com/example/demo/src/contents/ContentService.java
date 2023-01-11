@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.contents.dto.PatchContentRequest;
 import com.example.demo.src.contents.dto.PostCommentRequest;
 import com.example.demo.src.contents.dto.PostContentRequest;
+import com.example.demo.src.users.UserDao;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +24,13 @@ public class ContentService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private ContentDao contentDao;
     private S3Uploader s3Uploader;
+    private UserDao userDao;
 
     @Autowired
-    public ContentService(ContentDao contentDao, S3Uploader s3Uploader) {
+    public ContentService(ContentDao contentDao, S3Uploader s3Uploader, UserDao userDao) {
         this.contentDao = contentDao;
         this.s3Uploader = s3Uploader;
+        this.userDao=userDao;
     }
 
     // 게시글 작성 메서드

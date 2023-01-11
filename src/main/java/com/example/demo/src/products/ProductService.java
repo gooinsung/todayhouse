@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.products.dto.*;
 import com.example.demo.src.products.dto.object.SaveReviewDTO;
 import com.example.demo.src.products.dto.object.UpdateReviewDTO;
+import com.example.demo.src.users.UserDao;
 import com.example.demo.utils.S3Uploader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +25,13 @@ public class ProductService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private ProductDao productDao;
     private S3Uploader s3Uploader;
+    private UserDao userDao;
 
     @Autowired
-    public ProductService(ProductDao productDao,S3Uploader s3Uploader) {
+    public ProductService(ProductDao productDao,S3Uploader s3Uploader,UserDao userDao) {
         this.productDao = productDao;
         this.s3Uploader=s3Uploader;
+        this.userDao=userDao;
     }
 
     // 리뷰 작성 메서드

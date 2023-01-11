@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.USERS_EMPTY_USER_ID;
 
 @Service
 public class UserProvider {
@@ -42,17 +43,20 @@ public class UserProvider {
     @Transactional
     public List<GetScrapResponse> getScraps(int userNum) throws BaseException{
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             List<GetScrapResponse> response= new ArrayList<>();
             List<ScrapTypeNumber> tns=userDao.getTypeAndNumber(userNum);
             for(ScrapTypeNumber tn:tns){
+                System.out.println("type: "+tn.getType());
+                System.out.println("number :"+tn.getNumber());
                 GetScrapResponse res=new GetScrapResponse();
+                res.setType(tn.getType());
+                res.setNumber(tn.getNumber());
                 if(tn.getType().equals("c")){
-                    res.setType(tn.getType());
-                    res.setNumber(tn.getNumber());
                     res.setThumbnail(userDao.getContentThumbnail(tn.getNumber()));
                 }else{
-                    res.setType(tn.getType());
-                    res.setNumber(tn.getNumber());
                     res.setThumbnail(userDao.getProductThumbnail(tn.getNumber()));
                 }
                 response.add(res);
@@ -65,10 +69,13 @@ public class UserProvider {
         }
     }
 
-    // MyPage조회 메서드
+    // MyPage 조회 메서드
     @Transactional
     public MyPageResponse getMyPage(int userNum) throws BaseException{
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             MyPageResponse response= userDao.getMyPage(userNum);
             response.setScraps(this.getScraps(userNum));
             response.setContents(userDao.getMyContents(userNum));
@@ -94,6 +101,9 @@ public class UserProvider {
     @Transactional
     public List<GetContentComment> getMyComments(int userNum) throws BaseException{
         try{
+            if(userDao.checkUserNum(userNum)!=1){
+                throw new BaseException(USERS_EMPTY_USER_ID);
+            }
             return contentDao.getMyComments(userNum);
         }catch (Exception exception){
             logger.error("App - getMyComments UserProvider Error", exception);

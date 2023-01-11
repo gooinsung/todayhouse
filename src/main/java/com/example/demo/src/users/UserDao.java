@@ -37,6 +37,12 @@ public class UserDao {
         return  this.jdbcTemplate.queryForObject(query,int.class,email);
     }
 
+    // 유저 번호 체크
+    public int checkUserNum(int userNum){
+        String query="select exists(select * from user where status='active' and userNum=?)";
+        return this.jdbcTemplate.queryForObject(query,int.class,userNum);
+    }
+
     // 비밀번호 가져오기
     public String getUserPw(String email){
         String query="select userPw from user where status='active' and userEmail=?";
@@ -58,12 +64,6 @@ public class UserDao {
     }
 
     // 상품 스크랩 추가
-    public int insertProductScrap(int userNum,int productNum){
-        String query="insert into scrap (userNum,number,type) values(?,?,?)";
-        Object[] insertParam=new Object[]{userNum,productNum};
-        return this.jdbcTemplate.update(query,insertParam);
-    }
-
     public int insertScrap(int userNum, String type, int number){
         String query="insert into scrap(userNum,type,number) values(?,?,?)";
         Object[] insertParam=new Object[]{userNum,type,number};
@@ -101,6 +101,7 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(query, new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                System.out.println("프로덕트 썸네일은"+rs.getString("thumbnail"));
                 return rs.getString("thumbnail");
             }
         },number);
