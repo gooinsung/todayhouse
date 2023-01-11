@@ -101,7 +101,6 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(query, new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                System.out.println("프로덕트 썸네일은"+rs.getString("thumbnail"));
                 return rs.getString("thumbnail");
             }
         },number);

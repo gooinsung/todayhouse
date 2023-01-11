@@ -49,8 +49,6 @@ public class UserProvider {
             List<GetScrapResponse> response= new ArrayList<>();
             List<ScrapTypeNumber> tns=userDao.getTypeAndNumber(userNum);
             for(ScrapTypeNumber tn:tns){
-                System.out.println("type: "+tn.getType());
-                System.out.println("number :"+tn.getNumber());
                 GetScrapResponse res=new GetScrapResponse();
                 res.setType(tn.getType());
                 res.setNumber(tn.getNumber());

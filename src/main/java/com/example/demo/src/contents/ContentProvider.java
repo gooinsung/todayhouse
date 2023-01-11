@@ -36,7 +36,6 @@ public class ContentProvider {
     @Transactional
     public List<GetContentResponse> getContents() throws BaseException{
         try{
-            System.out.println("그냥 실행됨");
             return contentDao.getContents();
         }catch (Exception exception){
             logger.error("App - getContents ContentProvider Error", exception);
@@ -49,7 +48,6 @@ public class ContentProvider {
     @Transactional
     public List<GetContentResponse> getContentsBySearch(String search) throws BaseException{
         try{
-            System.out.println("검색 실행됨");
             String searchKeyword="%"+search+"%";
             return contentDao.getContentBySearch(searchKeyword);
         }catch (Exception exception){
