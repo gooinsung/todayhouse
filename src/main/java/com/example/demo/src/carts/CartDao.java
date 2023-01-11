@@ -26,7 +26,6 @@ public class CartDao {
     }
 
     // 주문 추가
-    @Transactional
     public int insertOrder(CreateOrderAndCartSaveDto req){
         int result=0;
         String query="insert into orders (productNum,userNum,orderCnt,price) values(?,?,?,?)";
@@ -84,7 +83,6 @@ public class CartDao {
     }
 
     // 장바구니 삭제
-    @Transactional
     public int deleteOrders(int ordersNum){
         String query="update orders set status='inactive' where ordersNum=?";
         return this.jdbcTemplate.update(query,ordersNum);

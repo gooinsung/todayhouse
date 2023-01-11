@@ -67,6 +67,7 @@ public class ContentDao {
     }
 
     // 게시글 작성
+    @Transactional
     public int postContent(PostContentRequest req){
         int result=0;
         String query1="insert into content (contentCate,size,form,style,userNum,contentImg,contentTitle,contents) values(?,?,?,?,?,?,?,?)";
