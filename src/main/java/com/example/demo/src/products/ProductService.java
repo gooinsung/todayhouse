@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.NONE_ORDERED_PRODUCT;
 
 @Service
 public class ProductService {
@@ -39,6 +40,7 @@ public class ProductService {
     public boolean postReview(PostReviewRequest req,MultipartFile file, int productNum)throws BaseException, IOException {
         try{
             boolean result= false;
+            System.out.println(file.getOriginalFilename());
             if(productDao.checkOrdered(req.getUserNum(),productNum)!=0){
                 String savedUrl="";
                 if(!file.isEmpty()){

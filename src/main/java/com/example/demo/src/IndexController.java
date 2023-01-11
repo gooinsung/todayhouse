@@ -7,6 +7,7 @@ import com.example.demo.src.products.ProductProvider;
 import com.example.demo.src.users.UserService;
 import com.example.demo.src.users.dto.PostJoinRequest;
 import com.example.demo.src.users.dto.PostLoginRequest;
+import com.example.demo.src.users.dto.object.PostLoginResponse;
 import com.example.demo.utils.JwtProvider;
 import com.example.demo.utils.S3Uploader;
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -69,16 +70,17 @@ public class IndexController {
 
     // 로그인 API(18)
     @PostMapping("/login")
-    public BaseResponse<String> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
+    public BaseResponse<PostLoginResponse> login(@Validated @RequestBody PostLoginRequest postLoginRequest, HttpServletResponse response) throws BaseException{
         logger.info("IndexController 내 18번 API 실행");
         String result="로그인 실패";
+        PostLoginResponse loginResponse= new PostLoginResponse();
         if(userService.loginUser(postLoginRequest)){
             result="로그인 성공";
             String jwt= jwtProvider.createJwt(postLoginRequest.getUserEmail());
-            response.setHeader("jwt",jwt);
-            response.addIntHeader("userNum",userService.getUserNum(postLoginRequest.getUserEmail()));
+            loginResponse.setJwt(jwt);
+            loginResponse.setUserNum(userService.getUserNum(postLoginRequest.getUserEmail()));
         }
-        return new BaseResponse<>(result);
+        return new BaseResponse<>(loginResponse);
     }
 
     // 스크랩 API(24)

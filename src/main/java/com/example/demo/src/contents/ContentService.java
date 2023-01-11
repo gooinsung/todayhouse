@@ -56,8 +56,6 @@ public class ContentService {
         try {
             boolean result = false;
             String savedImg = contentDao.getContentImg(contentNum);
-            System.out.println("원래 이미지: " + savedImg);
-
             s3Uploader.delete(savedImg);
             String updatedImg = s3Uploader.uploadFiles(file, "todayhouse");
             System.out.println("업데이트된 이미지: " + updatedImg);

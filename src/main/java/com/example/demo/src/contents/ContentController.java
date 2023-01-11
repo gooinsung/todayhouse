@@ -62,7 +62,7 @@ public class ContentController {
 
     // 게시글 작성 API(13)
     @PostMapping("/write")
-    public BaseResponse<String> writeContent(@RequestPart @Validated PostContentRequest postContentRequest, @RequestPart MultipartFile contentImg)throws BaseException, IOException{
+    public BaseResponse<String> writeContent(@RequestPart @Validated PostContentRequest postContentRequest, @RequestPart(value = "contentImg") MultipartFile contentImg)throws BaseException, IOException{
         logger.info("ContentController 내 13번 API 실행");
         String result="게시글 작성 실패";
         if(contentService.postContent(postContentRequest,contentImg)){
