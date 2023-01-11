@@ -77,6 +77,17 @@ public class UserService {
         }
     }
 
+    // 로그인 ResponseHeader에 들어갈 userNum 가져오기
+    @Transactional
+    public int getUserNum(String userEmail) throws BaseException{
+        try{
+            return userDao.getUserNum(userEmail);
+        }catch (Exception exception){
+            logger.error("App - loginUser UserService Error", exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     // 스크랩 추가
     @Transactional
     public boolean addScrap(int userNum, String type, int number) throws BaseException{

@@ -2,6 +2,7 @@ package com.example.demo.src.users;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.config.security.PrincipalDetails;
 import com.example.demo.src.contents.dto.GetContentComment;
 import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.users.dto.GetScrapResponse;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

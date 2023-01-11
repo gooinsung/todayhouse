@@ -18,7 +18,10 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new PrincipalDetails(userDao.loadByUsername(username)) {
-        };
+        PrincipalDetails principalDetails= new PrincipalDetails(userDao.loadByUsername(username));
+        if(principalDetails==null){
+            System.out.println("PrincipalDetails is NULL");
+        }
+        return principalDetails;
     }
 }

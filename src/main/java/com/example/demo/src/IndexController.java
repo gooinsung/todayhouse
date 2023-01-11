@@ -76,6 +76,7 @@ public class IndexController {
             result="로그인 성공";
             String jwt= jwtProvider.createJwt(postLoginRequest.getUserEmail());
             response.setHeader("jwt",jwt);
+            response.addIntHeader("userNum",userService.getUserNum(postLoginRequest.getUserEmail()));
         }
         return new BaseResponse<>(result);
     }

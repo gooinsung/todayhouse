@@ -175,6 +175,17 @@ public class UserDao {
         },userNum);
     }
 
+    // 유저번호 가져오기
+    public int getUserNum (String userEmail){
+        String query="select userNum from user where userEmail=?";
+        return this.jdbcTemplate.queryForObject(query, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getInt("userNum");
+            }
+        },userEmail);
+    }
+
 
 
 
