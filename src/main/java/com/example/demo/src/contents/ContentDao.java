@@ -152,13 +152,6 @@ public class ContentDao {
 
     }
 
-    // 게시글 스크랩 메서드
-    public int contentScrap(int userNum,int contentNum){
-        String query="insert into scrap (userNum,contentNum) values(?,?)";
-        Object[] insertParam=new Object[]{userNum,contentNum};
-        return this.jdbcTemplate.update(query,insertParam);
-    }
-
     // 홈 화면 게시글 리스트
     public List<GetHomeContent> getHomeContents(){
         String query="select contentNum,contentTitle,contentImg from content order by contentNum desc limit 4";
@@ -208,23 +201,6 @@ public class ContentDao {
         },contentNum);
     }
 
-    // 게시글 댓글 리스트
-    public List<GetContentComment> getMyComments(int userNum){
-        String query="select cm.commentNum, cm.comment, cm.updatedAt, u.userNum, u.userNickName, u.userImg from contentComment cm inner join user u on cm.userNum=u.userNum where cm.userNum=? and parentCommentNum is null";
-        return this.jdbcTemplate.query(query, new RowMapper<GetContentComment>() {
-            @Override
-            public GetContentComment mapRow(ResultSet rs, int rowNum) throws SQLException {
-                GetContentComment res= new GetContentComment();
-                res.setCommentNum(rs.getInt("commentNum"));
-                res.setComments(rs.getString("comment"));
-                res.setUpdatedAt(rs.getTimestamp("updatedAt"));
-                res.setUserNum(rs.getInt("userNum"));
-                res.setUserNickName(rs.getString("userNickName"));
-                res.setUserImg(rs.getString("userImg"));
-                return res;
-            }
-        },userNum);
-    }
 
     // 자식 댓글 가져오기
     public List<GetContentComment> getChildComments(int parentCommentNum){
@@ -243,6 +219,25 @@ public class ContentDao {
             }
         },parentCommentNum);
     }
+
+    // 게시글 댓글 리스트
+    public List<GetContentComment> getMyComments(int userNum){
+        String query="select cm.commentNum, cm.comment, cm.updatedAt, u.userNum, u.userNickName, u.userImg from contentComment cm inner join user u on cm.userNum=u.userNum where cm.userNum=? and parentCommentNum is null";
+        return this.jdbcTemplate.query(query, new RowMapper<GetContentComment>() {
+            @Override
+            public GetContentComment mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetContentComment res= new GetContentComment();
+                res.setCommentNum(rs.getInt("commentNum"));
+                res.setComments(rs.getString("comment"));
+                res.setUpdatedAt(rs.getTimestamp("updatedAt"));
+                res.setUserNum(rs.getInt("userNum"));
+                res.setUserNickName(rs.getString("userNickName"));
+                res.setUserImg(rs.getString("userImg"));
+                return res;
+            }
+        },userNum);
+    }
+
     
     // 게시글 댓글 작성
     public int insertComment(PostCommentRequest req){

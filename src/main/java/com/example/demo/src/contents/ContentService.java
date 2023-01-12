@@ -58,7 +58,6 @@ public class ContentService {
             String savedImg = contentDao.getContentImg(contentNum);
             s3Uploader.delete(savedImg);
             String updatedImg = s3Uploader.uploadFiles(file, "todayhouse");
-            System.out.println("업데이트된 이미지: " + updatedImg);
             request.setContentImg(updatedImg);
             if (contentDao.updateContent(contentNum, request) == 1) result = true;
             return result;

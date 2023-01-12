@@ -56,7 +56,7 @@ public class CartDao {
 
     // 주문 상품 조회
     public List<Cart> getOrderedCarts(int userNum){
-        String query="select p.productNum, p.productCom, (select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail, p.productName, o.price, o.ordersNum, o.orderCnt, o.status from orders o inner join product p on o.productNum=p.productNum where o.status='ordered' and o.userNum=? ";
+        String query="select p.productNum, p.productCom, (select t.thumbnail from productThumbnails t where t.productNum=p.productNum limit 1) as thumbnail, p.productName, o.price, o.ordersNum, o.orderCnt, o.status from orders o inner join product p on o.productNum=p.productNum where o.status='ordered' and o.orderCnt>0 and o.userNum=? ";
         return this.jdbcTemplate.query(query, new RowMapper<Cart>() {
             @Override
             public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -77,9 +77,17 @@ public class CartDao {
 
     // 상품 주문 수량 수정
     public int updateOrderCnt(PatchOrderCntRequest req){
+        int result =0;
         String query="update orders set orderCnt=? where ordersNum=?";
         Object[] updateParam=new Object[]{req.getOrderCnt(),req.getOrdersNum()};
-        return this.jdbcTemplate.update(query,updateParam);
+        if(this.jdbcTemplate.update(query,updateParam)==1){
+            result= this.updateOrderStatusByCnt(req.getOrderCnt());
+        }
+        return result;
+    }
+    public int updateOrderStatusByCnt(int ordersNum){
+        String query="update orders set status='inactive' where orderCnt<=0 and ordersNum=?";
+        return this.jdbcTemplate.update(query,ordersNum);
     }
 
     // 장바구니 삭제
