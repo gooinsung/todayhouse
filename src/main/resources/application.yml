@@ -9,8 +9,8 @@ spring:
   datasource:
     platform: mysql
     url: jdbc:mysql://database-1.ckevuiz8guuf.ap-northeast-2.rds.amazonaws.com/todayhouse?autoReconnect=true
-    username: admin
-    password: Rndlstjd112!
+    username: ?
+    password: ?
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 
@@ -26,8 +26,8 @@ cloud:
     s3:
       bucket: bali-todayhouse
     credentials:
-      access-key: AKIA4GS24BHYWNQMB7PS
-      secret-key: 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
+      access-key: ?
+      secret-key: ?
     region:
       static: ap-northeast-2
       auto: false
