@@ -93,23 +93,31 @@ Done
 2023-01-11<br>
 - 댓글 작성 시, 부모댓글 작성 가능하도록 수정
 - 테스트 데이터들 정리
-- 발생하는 Exception 
+- 발생하는 Exception 처리
+
+2023-01-12<br>
+- 마지막 코드 정리
+- 시연영상 촬영
+- API 명세서 및 ERD 정리
 
 ## 문제
 2023-01-10
-- API 작성을 모두 마치고, 서버에서 테스트를 진행하던중 계속하여 Request Method "Get" Not Supported 라는 에러가 발생하였다.
+1. API 작성을 모두 마치고, 서버에서 테스트를 진행하던중 계속하여 Request Method "Get" Not Supported 라는 에러가 발생하였다.
 분명 POST 로 로그인을 시도하는 메서드였는데, 아무리 찾아봐도 답이 나오지 않았다. 그래서 다른 API들을 실행하던중, POST 로 보내는
 API중, 실행은되지만 post 기능이 아닌, 같은 URL에 GET API 가 호출되었다. 이를 기반으로 검색해보니, 내 도메인은 https://prod.baliserver.shop
 이다. nginx 서버설정에서, prod.baliserver.shop 나, http:// 로 오는 URL을 원래 주소로 리다이렉션 할수 있도록 설정하였는데,
 리다이렉트 과정에서 메서드가 모두 GET 으로 전송된다는 사실을 알았다. 모든 요청에 https:// 로 경로 수정 후 문제 해결.
-- 로그인시, 다양한 API에 로그인한 유저의 userNum값이 필요한데, 처음 userNum 값을 어떻게 가져와야 할지 문제가 있었다.
+2. 로그인시, 다양한 API에 로그인한 유저의 userNum값이 필요한데, 처음 userNum 값을 어떻게 가져와야 할지 문제가 있었다.
 원래 SpringSecurity 설정에서 @AuthenticationPrincipal 을 통해 UserDetails 객체로 userNum 을 받을 수 있는데, 이를 간과하고 
 필요한 userNum 값을, REST API URL 상에 userNum 을 변수나 쿼리스트링으로 받도록 설계하였다. 프로젝트 막바지에
 이를 알아차려 API들의 URL 경로를 수정하기에는 무리가 있을것같아, 로그인 시 Response Header에 jwt와 userNum 값을 같이 넘겨주는
 방식으로 처리하였다.
-- 리뷰작성API 작성시, 리뷰에는 사진을 첨부할수도 안할수도 있도록 코드를 작성하였다. 파일을 받을때, @RequestPart(required=false) MultipartFile file
+3. 리뷰작성API 작성시, 리뷰에는 사진을 첨부할수도 안할수도 있도록 코드를 작성하였다. 파일을 받을때, @RequestPart(required=false) MultipartFile file
 로 받았고,service 에서 if(!file.isEmpty){savedUrl=s3uploader.uploadFiles()} 로, 파일이 없으면 공백을, 파일이 있으면 저장 후 String 값을 넣어주도록 설계하였는데,
 계속 file.isEmpty에서 NullPointException이 발생하였다. 아무리 해결해보려해도 같은 상황만 반복되었기에, 리뷰에는 파일첨부를 하는것으로 마무리하였다.
+
+### 해결
+3. 파일 자체를 안보내는게 아니라, 파일을 null로 보내도록 설정하면 오류없이 잘 작동하는것을 확인하였다..
 
 Question
 - 동적쿼리 작성법(사용자의 선택에따라, 검색 키워드가 동적으로 바뀌게 될 경우, 경우에수에 맞도록 컨트롤러에 API 를 작성해야 하는지?)
