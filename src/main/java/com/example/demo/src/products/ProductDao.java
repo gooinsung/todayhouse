@@ -307,6 +307,17 @@ public class ProductDao {
         });
     }
 
+    // 리뷰 수정시 기존 사진 삭제를 위한 사진 가져오기
+    public String getReviewImg(int reviewNum){
+        String query="select storedFilename from review where reviewNum=?";
+        return this.jdbcTemplate.queryForObject(query, new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("storedFilename");
+            }
+        },reviewNum);
+    }
+
 
 
 

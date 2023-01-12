@@ -3,6 +3,7 @@ package com.example.demo.src.products;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.products.dto.*;
+import com.example.demo.utils.S3Uploader;
 import com.fasterxml.jackson.databind.cfg.BaseSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,13 @@ public class ProductController {
     private ProductService productService;
 
     private ProductProvider productProvider;
+    private S3Uploader s3Uploader;
 
     @Autowired
-    public ProductController(ProductService productService, ProductProvider productProvider) {
+    public ProductController(ProductService productService, ProductProvider productProvider,S3Uploader s3Uploader) {
         this.productService = productService;
         this.productProvider = productProvider;
+        this.s3Uploader = s3Uploader;
     }
 
     // 상품 상세조회 API(1)
@@ -66,7 +69,7 @@ public class ProductController {
 
     // 상품 리뷰 작성 API(4)
     @PostMapping("/{productNum}/review/write")
-    public BaseResponse<String> postReview(@PathVariable int productNum, @RequestPart @Validated PostReviewRequest req, @RequestPart(required = false) MultipartFile file) throws BaseException,IOException{
+    public BaseResponse<String> postReview(@PathVariable int productNum, @RequestPart @Validated PostReviewRequest req, @RequestPart MultipartFile file) throws BaseException,IOException{
         logger.info("ProductController 내 4번 API 실행");
         String message="리뷰 작성 실패";
         if(productService.postReview(req,file,productNum)){
