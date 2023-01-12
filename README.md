@@ -107,6 +107,9 @@ API중, 실행은되지만 post 기능이 아닌, 같은 URL에 GET API 가 호�
 필요한 userNum 값을, REST API URL 상에 userNum 을 변수나 쿼리스트링으로 받도록 설계하였다. 프로젝트 막바지에
 이를 알아차려 API들의 URL 경로를 수정하기에는 무리가 있을것같아, 로그인 시 Response Header에 jwt와 userNum 값을 같이 넘겨주는
 방식으로 처리하였다.
+- 리뷰작성API 작성시, 리뷰에는 사진을 첨부할수도 안할수도 있도록 코드를 작성하였다. 파일을 받을때, @RequestPart(required=false) MultipartFile file
+로 받았고,service 에서 if(!file.isEmpty){savedUrl=s3uploader.uploadFiles()} 로, 파일이 없으면 공백을, 파일이 있으면 저장 후 String 값을 넣어주도록 설계하였는데,
+계속 file.isEmpty에서 NullPointException이 발생하였다. 아무리 해결해보려해도 같은 상황만 반복되었기에, 리뷰에는 파일첨부를 하는것으로 마무리하였다.
 
 Question
 - 동적쿼리 작성법(사용자의 선택에따라, 검색 키워드가 동적으로 바뀌게 될 경우, 경우에수에 맞도록 컨트롤러에 API 를 작성해야 하는지?)
