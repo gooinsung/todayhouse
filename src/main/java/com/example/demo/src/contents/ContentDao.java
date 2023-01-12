@@ -154,7 +154,7 @@ public class ContentDao {
 
     // 홈 화면 게시글 리스트
     public List<GetHomeContent> getHomeContents(){
-        String query="select contentNum,contentTitle,contentImg from content order by contentNum desc limit 4";
+        String query="select contentNum,contentTitle,contentImg from content  where status='active' order by contentNum desc limit 4";
         return this.jdbcTemplate.query(query, new RowMapper<GetHomeContent>() {
             @Override
             public GetHomeContent mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -168,7 +168,7 @@ public class ContentDao {
     }
     // 홈 화면 인기 게시글 리스트
     public List<GetHomeFamousContent> getHomeFamousContents(){
-        String query="select c.contentNum,c.contentImg, (select u.userNickName from user u where u.userNum=c.userNum) as userNickName from content c order by contentNum desc limit 4 ";
+        String query="select c.contentNum,c.contentImg, (select u.userNickName from user u where u.userNum=c.userNum) as userNickName from content c  where c.status='active' order by contentNum desc limit 4";
         return this.jdbcTemplate.query(query, new RowMapper<GetHomeFamousContent>() {
             @Override
             public GetHomeFamousContent mapRow(ResultSet rs, int rowNum) throws SQLException {
