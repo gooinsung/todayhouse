@@ -54,10 +54,13 @@ public class ContentService {
     @Transactional
     public boolean modifyContent(int contentNum, PatchContentRequest request, MultipartFile file) throws BaseException, IOException {
         try {
+            String updatedImg= "contentImg";
             boolean result = false;
-            String savedImg = contentDao.getContentImg(contentNum);
-            s3Uploader.delete(savedImg);
-            String updatedImg = s3Uploader.uploadFiles(file, "todayhouse");
+            if(!file.isEmpty()){
+                String savedImg = contentDao.getContentImg(contentNum);
+                s3Uploader.delete(savedImg);
+                updatedImg = s3Uploader.uploadFiles(file, "todayhouse");
+            }
             request.setContentImg(updatedImg);
             if (contentDao.updateContent(contentNum, request) == 1) result = true;
             return result;

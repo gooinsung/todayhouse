@@ -39,7 +39,10 @@ public class ProductService {
     @Transactional
     public boolean postReview(PostReviewRequest req,MultipartFile file, int productNum)throws BaseException, IOException {
         try{
-            String savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
+            String savedUrl="";
+            if(!file.isEmpty()){
+                savedUrl=s3Uploader.uploadFiles(file,"todayhouse");
+            }
             boolean result= false;
             if(productDao.checkOrdered(req.getUserNum(),productNum)!=0){
                 SaveReviewDTO dto= new SaveReviewDTO(req, savedUrl,productNum);
@@ -62,12 +65,16 @@ public class ProductService {
     public boolean patchReview(PatchReviewRequest req,MultipartFile file, int reviewNum) throws BaseException,IOException{
         try{
             boolean result=false;
-            String originalSavedFile= productDao.getReviewImg(reviewNum);
-            if(!originalSavedFile.isEmpty()){
-                s3Uploader.delete(originalSavedFile);
+            String updateImg="storedFilename";
+            if(!file.isEmpty()){
+                String originalSavedFile= productDao.getReviewImg(reviewNum);
+                if(originalSavedFile!=null){
+                    s3Uploader.delete(originalSavedFile);
+                    updateImg= s3Uploader.uploadFiles(file,"todayhouse");
+                }
             }
-            String savedFile= s3Uploader.uploadFiles(file,"todayhouse");
-            UpdateReviewDTO dto= new UpdateReviewDTO(req,savedFile,reviewNum);
+
+            UpdateReviewDTO dto= new UpdateReviewDTO(req,updateImg,reviewNum);
             if(productDao.updateReview(dto)==1){
                 result=true;
             }
