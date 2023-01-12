@@ -95,11 +95,4 @@ public class IndexController {
     }
 
 
-    // file.isEmpty 테스트
-    @PostMapping("/file")
-    public ResponseEntity<String> postFile(@RequestPart(required = false) MultipartFile file) throws IOException{
-        String result="실패";
-        if(file.isEmpty()) result="성공";
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
 }
