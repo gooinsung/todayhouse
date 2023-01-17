@@ -24,7 +24,7 @@ public class ControllerException {
     @ExceptionHandler(BaseException.class)
     public BaseResponse BaseExceptionHandler(BaseException e){
         logger.error("Controller 내 BaseException 발생");
-        return new BaseResponse(DATABASE_ERROR);
+        return new BaseResponse(e.getStatus());
     }
 
 

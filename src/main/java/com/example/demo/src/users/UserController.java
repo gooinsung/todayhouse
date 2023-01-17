@@ -46,6 +46,7 @@ public class UserController {
     @GetMapping("/scrap/{userNum}")
     public BaseResponse<List<GetScrapResponse>> getScraps(@PathVariable int userNum) throws BaseException{
         logger.info("UserController 내 20번 API 실행");
+        userProvider.checkUserNum(userNum);
         List<GetScrapResponse> result= userProvider.getScraps(userNum);
         return new BaseResponse<>(result);
     }
@@ -54,6 +55,7 @@ public class UserController {
     @GetMapping("/{userNum}")
     public BaseResponse<MyPageResponse> getMyPage(@PathVariable int userNum) throws BaseException{
         logger.info("UserController 내 21번 API 실행");
+        userProvider.checkUserNum(userNum);
         MyPageResponse myPage= userProvider.getMyPage(userNum);
         return new BaseResponse<>(myPage);
     }
@@ -62,6 +64,7 @@ public class UserController {
     @PatchMapping("/{userNum}/mypage")
     public BaseResponse<String> patchMyPage(@PathVariable int userNum,@RequestPart(required = false) String userNickName, @RequestPart(required = false) MultipartFile userImg) throws BaseException, IOException {
         logger.info("UserController 내 31번 API 실행");
+        userProvider.checkUserNum(userNum);
         String result="유저 정보 수정 실패";
         if(userService.updateUser(userNum,userNickName,userImg)){
             result="유저 정보 수정 성공";
@@ -73,6 +76,7 @@ public class UserController {
     @GetMapping("/{userNum}/myreview")
     public BaseResponse<List<GetReviewResponse>> getMyReviews(@PathVariable int userNum) throws BaseException{
         logger.info("UserController 내 32번 API 실행");
+        userProvider.checkUserNum(userNum);
         List<GetReviewResponse> response=userProvider.getMyReviews(userNum);
         return new BaseResponse<>(response);
     }
@@ -81,6 +85,7 @@ public class UserController {
     @GetMapping("/{userNum}/mycomment")
     public BaseResponse<List<GetContentComment>> getMyComments(@PathVariable int userNum) throws BaseException{
         logger.info("UserController 내 33번 API 실행");
+        userProvider.checkUserNum(userNum);
         List<GetContentComment> response= userProvider.getMyComments(userNum);
         return new BaseResponse<>(response);
     }

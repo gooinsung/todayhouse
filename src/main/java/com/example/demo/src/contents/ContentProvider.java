@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class ContentProvider {
@@ -109,6 +109,20 @@ public class ContentProvider {
         }catch (Exception exception){
             logger.error("App - getLikeUserResponses ContentProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 유효한 게시글 체크
+    public void checkContent(int contentNum) throws BaseException{
+        if(contentDao.checkContent(contentNum)==0){
+            throw new BaseException(INACTIVE_CONTENT);
+        }
+    }
+
+    // 유효한 댓글체크
+    public void checkComment(int commentNum) throws BaseException{
+        if(contentDao.checkComment(commentNum)==0){
+            throw new BaseException(INACTIVE_COMMENT);
         }
     }
 }

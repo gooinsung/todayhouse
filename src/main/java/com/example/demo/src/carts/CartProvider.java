@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.example.demo.config.BaseResponseStatus.USERS_EMPTY_USER_ID;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class CartProvider {
@@ -62,6 +61,13 @@ public class CartProvider {
         }catch (Exception exception){
             logger.error("App - getOrderedList CartProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 유효한 주문 체크
+    public void checkOrder(int orderNum)throws BaseException{
+        if(cartDao.checkOrder(orderNum)==0){
+            throw new BaseException(INACTIVE_ORDER);
         }
     }
 }

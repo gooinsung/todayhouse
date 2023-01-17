@@ -12,6 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.executable.ValidateOnExecution;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class ProductController {
     @GetMapping("/{productNum}")
     public BaseResponse<GetProductDetailResponse> getProductDetails(@PathVariable int productNum) throws BaseException, IOException{
         logger.info("ProductController 내 1번 API 실행");
+        productProvider.existsProduct(productNum);
         GetProductDetailResponse response=productProvider.getProductDetailResponse(productNum);
         return new BaseResponse<GetProductDetailResponse>(response);
     }
@@ -71,6 +74,7 @@ public class ProductController {
     @PostMapping("/{productNum}/review/write")
     public BaseResponse<String> postReview(@PathVariable int productNum, @RequestPart @Validated PostReviewRequest req, @RequestPart MultipartFile file) throws BaseException,IOException{
         logger.info("ProductController 내 4번 API 실행");
+        productProvider.existsProduct(productNum);
         String message="리뷰 작성 실패";
         if(productService.postReview(req,file,productNum)){
             message="리뷰 작성 성공";
@@ -82,6 +86,8 @@ public class ProductController {
     @PatchMapping("/{productNum}/review/write")
     public BaseResponse<String> patchReview(@PathVariable int productNum,@RequestPart @Validated PatchReviewRequest req,@RequestPart(required = false) MultipartFile file,@RequestParam int reviewNum) throws BaseException, IOException{
         logger.info("ProductController 내 5번 API 실행");
+        productProvider.existsProduct(productNum);
+        productProvider.existsReview(reviewNum);
         String result="리뷰 수정 실패";
         if(productService.patchReview(req,file,reviewNum)){
             result="리뷰 수정 성공";
@@ -93,6 +99,8 @@ public class ProductController {
     @DeleteMapping("/{productNum}/review/write")
     public BaseResponse<String> deleteReview(@PathVariable int productNum,@RequestParam int reviewNum) throws BaseException{
         logger.info("ProductController 내 6번 API 실행");
+        productProvider.existsProduct(productNum);
+        productProvider.existsReview(reviewNum);
         String result="리뷰 삭제 실패";
         if(productService.deleteReview(reviewNum)){
             result=" 리뷰 삭제 성공";
@@ -104,13 +112,15 @@ public class ProductController {
     @GetMapping("/{productNum}/review/write")
     public BaseResponse<GetReviewResponse> getReview(@PathVariable int productNum,@RequestParam int reviewNum) throws BaseException,IOException{
         logger.info("ProductController 내 23번 API 실행");
+        productProvider.existsProduct(productNum);
+        productProvider.existsReview(reviewNum);
         GetReviewResponse res= productProvider.getReview(reviewNum);
         return new BaseResponse<>(res);
     }
 
     // 상품 카테고리별 조회 API(35), 상품 카테고리별 검색 API(36)
     @GetMapping("/view")
-    public BaseResponse<List<GetProductResponse>> getProductOrderByCateAndSearch(@RequestParam int cate,@RequestParam(required = false) String search)throws BaseException{
+    public BaseResponse<List<GetProductResponse>> getProductOrderByCateAndSearch(@RequestParam @Min(0) @Max(9) int cate, @RequestParam(required = false) String search)throws BaseException{
         List<GetProductResponse> result= new ArrayList<>();
         if(search==null){
             logger.info("ProductController 내 35번 API 실행");

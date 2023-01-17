@@ -23,7 +23,8 @@ public enum BaseResponseStatus {
     INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
 
     // users
-    USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
+    USERS_EMPTY_USER_ID(false, 2010, "유저 아이디를 확인해주세요."),
+    NONE_USER(false,2011,"유효하지 않는 유저번호입니다."),
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
@@ -51,18 +52,25 @@ public enum BaseResponseStatus {
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
     NONE_ORDERED_PRODUCT(false,4002,"주문한적 없는 상품입니다."),
-
+    NONE_PRODUCT(false,4003,"없는 상품번호입니다."),
+    NONE_REVIEW(false,4004,"리뷰 번호를 확인해주세요"),
     //[PATCH] /users/{userIdx}
     MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
+
+
     
-    IO_ERROR(false, 4999,"파일처리 예외가 발생하였습니다.");
+    IO_ERROR(false, 4999,"파일처리 예외가 발생하였습니다."),
 
 
     // 5000 : 필요시 만들어서 쓰세요
     // 6000 : 필요시 만들어서 쓰세요
+
+    INACTIVE_ORDER(false,5000,"유효하지 않은 주문번호입니다."),
+    INACTIVE_CONTENT(false,5001,"유효하지 않은 게시글번호입니다."),
+    INACTIVE_COMMENT(false,5002,"유효하지 않은 댓글 번호입니다");
 
 
     private final boolean isSuccess;

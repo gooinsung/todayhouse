@@ -28,6 +28,18 @@ public class ProductDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    // 상품번호 유효성 체크
+    public int checkProductNum(int productNum){
+        String query="select exists(select * from product where status='active' and productNum=?)";
+        return this.jdbcTemplate.queryForObject(query,int.class,productNum);
+    }
+
+    // 리뷰 유효성 체크
+    public int checkReview(int reviewNum){
+        String query="select exists(select * from review where status='active' and reviewNum=?)";
+        return this.jdbcTemplate.queryForObject(query,int.class,reviewNum);
+    }
+
     // 게시글 상세정보 가져오기
     public Product getProductDetail(int productNum){
         String query= "select count(r.reviewNum) as cnt, p.productNum, p.productName, p.productPrice, p.productInfo, p.productCate, p.productCom, r.pointAvg from product p left join review r on p.productNum= r.productNum where p.status='active' and p.productNum=?";

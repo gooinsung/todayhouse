@@ -19,8 +19,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.example.demo.config.BaseResponseStatus.USERS_EMPTY_USER_ID;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class UserProvider {
@@ -43,9 +42,6 @@ public class UserProvider {
     @Transactional
     public List<GetScrapResponse> getScraps(int userNum) throws BaseException{
         try{
-            if(userDao.checkUserNum(userNum)!=1){
-                throw new BaseException(USERS_EMPTY_USER_ID);
-            }
             List<GetScrapResponse> response= new ArrayList<>();
             List<ScrapTypeNumber> tns=userDao.getTypeAndNumber(userNum);
             for(ScrapTypeNumber tn:tns){
@@ -71,9 +67,6 @@ public class UserProvider {
     @Transactional
     public MyPageResponse getMyPage(int userNum) throws BaseException{
         try{
-            if(userDao.checkUserNum(userNum)!=1){
-                throw new BaseException(USERS_EMPTY_USER_ID);
-            }
             MyPageResponse response= userDao.getMyPage(userNum);
             response.setScraps(this.getScraps(userNum));
             response.setContents(userDao.getMyContents(userNum));
@@ -99,13 +92,17 @@ public class UserProvider {
     @Transactional
     public List<GetContentComment> getMyComments(int userNum) throws BaseException{
         try{
-            if(userDao.checkUserNum(userNum)!=1){
-                throw new BaseException(USERS_EMPTY_USER_ID);
-            }
             return contentDao.getMyComments(userNum);
         }catch (Exception exception){
             logger.error("App - getMyComments UserProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 유효한 유저 체크
+    public void checkUserNum(int userNum) throws BaseException{
+        if(userDao.checkUserNum(userNum)==0){
+            throw new BaseException(NONE_USER);
         }
     }
 }

@@ -285,4 +285,16 @@ public class ContentDao {
             }
         },contentNum);
     }
+
+    // 유효한 게시글 체크
+    public int checkContent(int contentNum){
+        String query="select exists(select * from content where status='active' and contentNum=?)";
+        return this.jdbcTemplate.queryForObject(query,int.class,contentNum);
+    }
+
+    // 유효한 댓글 체크
+    public int checkComment(int commentNum){
+        String query="select exists(select * from contentComment where status='active' and commentNum=?)";
+        return this.jdbcTemplate.queryForObject(query,int.class,commentNum);
+    }
 }

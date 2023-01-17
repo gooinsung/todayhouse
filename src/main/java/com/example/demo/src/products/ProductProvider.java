@@ -8,6 +8,7 @@ import com.example.demo.src.products.dto.GetReviewResponse;
 import com.example.demo.src.products.dto.object.GetProduct;
 import com.example.demo.src.users.UserDao;
 import com.example.demo.utils.S3Uploader;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.io.IOException;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class ProductProvider {
@@ -89,6 +90,7 @@ public class ProductProvider {
     @Transactional
     public GetProductDetailResponse getProductDetailResponse(int productNum) throws BaseException,IOException{
         try{
+            this.existsProduct(productNum);
             GetProductDetailResponse response= new GetProductDetailResponse();
             response.setProduct(productDao.getProductDetail(productNum));
             response.setProductImg(productDao.getProductImgs(productNum));
@@ -130,6 +132,19 @@ public class ProductProvider {
         }catch (Exception exception){
             logger.error("App - getHomeProducts ProductProvider Error", exception);
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 유효한 상품조회
+    public void existsProduct(int productNum) throws BaseException {
+        if(productDao.checkProductNum(productNum)==0){
+            throw new BaseException(NONE_PRODUCT);
+        }
+    }
+    // 유효한 리뷰 조회
+    public void existsReview(int reviewNum) throws BaseException{
+        if(productDao.checkReview(reviewNum)==0){
+            throw new BaseException(NONE_REVIEW);
         }
     }
 }

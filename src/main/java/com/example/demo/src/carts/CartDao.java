@@ -116,6 +116,14 @@ public class CartDao {
         return this.jdbcTemplate.update(query,userNum);
     }
 
+    // 유효한 주문 체크
+    public int checkOrder(int orderNum){
+        String query="select exists(select * from orders where status='active' and ordersNum=?)";
+        return this.jdbcTemplate.queryForObject(query,int.class,orderNum);
+    }
+
+
+
 
 
 

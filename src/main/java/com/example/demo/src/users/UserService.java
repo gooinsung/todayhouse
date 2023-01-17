@@ -39,11 +39,11 @@ public class UserService {
     // 회원 가입
     @Transactional
     public boolean createUser(PostJoinRequest request) throws BaseException {
+        if(userDao.checkEmail(request.getUserEmail())==1){
+            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+        }
         try{
             boolean result= false;
-            if(userDao.checkEmail(request.getUserEmail())==1){
-                throw new BaseException(POST_USERS_EXISTS_EMAIL);
-            }
             String encryptedPw= SHA256.encrypt(request.getUserPw());
             request.setUserPw(encryptedPw);
             if(userDao.createUser(request)==1){
@@ -59,11 +59,11 @@ public class UserService {
     // 로그인
     @Transactional
     public boolean loginUser(PostLoginRequest postLoginRequest) throws BaseException{
+        if(userDao.checkEmail(postLoginRequest.getUserEmail())==0){
+            throw new BaseException(USERS_EMPTY_USER_ID);
+        }
         try{
             boolean result= false;
-            if(userDao.checkEmail(postLoginRequest.getUserEmail())!=1){
-                throw new BaseException(USERS_EMPTY_USER_ID);
-            }
             String savedPw= userDao.getUserPw(postLoginRequest.getUserEmail());
             String encryptedPw=SHA256.encrypt(postLoginRequest.getUserPw());
             if(savedPw.equals(encryptedPw)){
@@ -92,9 +92,6 @@ public class UserService {
     @Transactional
     public boolean addScrap(int userNum, String type, int number) throws BaseException{
         try{
-            if(userDao.checkUserNum(userNum)!=1){
-                throw new BaseException(USERS_EMPTY_USER_ID);
-            }
             boolean result= false;
             if(userDao.insertScrap(userNum,type,number)==1){
                 result=true;
@@ -109,9 +106,6 @@ public class UserService {
     // 유저 정보 수정 메서드
     public boolean updateUser(int userNum, String userNickName, MultipartFile file) throws BaseException, IOException {
         try{
-            if(userDao.checkUserNum(userNum)!=1){
-                throw new BaseException(USERS_EMPTY_USER_ID);
-            }
             boolean result=false;
             String savedUserImg=null;
             String saveUserImg=null;

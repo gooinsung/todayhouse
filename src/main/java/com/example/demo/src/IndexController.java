@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.contents.ContentProvider;
 import com.example.demo.src.products.ProductProvider;
+import com.example.demo.src.users.UserProvider;
 import com.example.demo.src.users.UserService;
 import com.example.demo.src.users.dto.PostJoinRequest;
 import com.example.demo.src.users.dto.PostLoginRequest;
@@ -33,15 +34,16 @@ public class IndexController {
     private ProductProvider productProvider;
     private ContentProvider contentProvider;
     private UserService userService;
-
+    private UserProvider userProvider;
     private JwtProvider jwtProvider;
     @Autowired
-    public IndexController(S3Uploader s3Uploader, ProductProvider productProvider, ContentProvider contentProvider, UserService userService, JwtProvider jwtProvider) {
+    public IndexController(S3Uploader s3Uploader, ProductProvider productProvider, ContentProvider contentProvider, UserService userService, JwtProvider jwtProvider,UserProvider userProvider) {
         this.s3Uploader = s3Uploader;
         this.productProvider = productProvider;
         this.contentProvider = contentProvider;
         this.userService = userService;
         this.jwtProvider = jwtProvider;
+        this.userProvider = userProvider;
     }
 
 
@@ -87,6 +89,7 @@ public class IndexController {
     @PostMapping("/scrap")
     public BaseResponse<String> scrap(@RequestParam int userNum, @RequestParam String type, @RequestParam int number) throws BaseException{
         logger.info("IndexController 내 24번 API 실행");
+        userProvider.checkUserNum(userNum);
         String result="스크랩북 추가 실패";
         if(userService.addScrap(userNum,type,number)){
             result="스크랩북 추가 성공";
