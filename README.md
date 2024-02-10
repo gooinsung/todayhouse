@@ -25,7 +25,7 @@
 
 #### 9. API 명세서 : https://docs.google.com/spreadsheets/d/1SXbu_G3MzdjnHe1dAhFsKCaYNRuAiPw_zs1ee79t3QU/edit?usp=sharing
 
-#### 10. 프로젝트 링크 : https://prod.baliserver.shop/home
+#### 10. 프로젝트 링크 : https://prod.baliserver.shop/home (서버 비용 문제로 현제 운용하고 있지 않습니다.)
 
 #### 11. ERD
 ![todayHouse_20230110_222537](https://user-images.githubusercontent.com/108322891/211563631-765eee42-373a-4601-a594-a6620ca76cba.png)
